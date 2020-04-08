@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/ll_pop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="vertical">
+        ​
+        <Button
+            android:id="@+id/icon_btn_camera"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="@drawable/picture"
+            android:text="相機"
+            android:textColor="#0066FF" />
+        ​
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10px" />
+        ​
+        <Button
+            android:id="@+id/icon_btn_choose"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="@drawable/picture"
+            android:text="相簿"
+            android:onClick="choosePhoto"
+            android:textColor="#0066FF" />
+        ​
+        <Button
+            android:id="@+id/icon_btn_cancel"
+            android:background="@drawable/picture"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
+            android:text="取消"
+            android:textColor="#707070" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="15px" />
+    </LinearLayout>
+
+</RelativeLayout>
