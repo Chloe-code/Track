@@ -120,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     void testbranch() {
         Log.d("test","測試功能");
     }
+    public void test()
+    {}
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode)
