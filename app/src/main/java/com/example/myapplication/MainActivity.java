@@ -114,14 +114,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,5));
         googleMap.addMarker(markerOptions);
     }
-    void master() {
-        Log.d("test","測試master功能");}
+   public void test2()
+   {
 
-    void testbranch() {
-        Log.d("test","測試功能");
-    }
-    public void test()
-    {}
+   }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode)
