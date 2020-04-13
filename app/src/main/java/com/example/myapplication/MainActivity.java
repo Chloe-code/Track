@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -18,17 +19,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+import org.w3c.dom.ls.LSException;
+
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     Toolbar toolbar;
-    private TextView textView;
-    private Button button, button3, button4, button5, buttont;
-    private LocationManager locationManager;
-    private String commadStr;
-    public static final int MY_PERMISSION_ACCESS_COARSE_LOCATION = 11;
+    Location currentLocation;
+    FusedLocationProviderClient fusedLocationProviderClient;
+    private static final int REQUEST_CODE=101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,73 +49,38 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomnav = findViewById(R.id.bottom_navigation);
         bottomnav.setOnNavigationItemSelectedListener(navlistener);
 
-        toolbar=(Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        textView = (TextView) findViewById(R.id.textView3);
-        button3 = (Button) findViewById(R.id.button3);
-        button4 = (Button) findViewById(R.id.button4);
-        button4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent gopersonaledit = new Intent(MainActivity.this,personaledit.class);
-                startActivity(gopersonaledit);
-            }
-        });
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fetchLastLocation();
+    }
 
-        button5 = (Button) findViewById(R.id.button5);
-        button5.setOnClickListener(new View.OnClickListener() {
+    private void fetchLastLocation()
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this,new String[]
+                    {Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
+            return;
+        }
+        Task<Location> task = fusedLocationProviderClient.getLastLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
-            public void onClick(View v) {
-                Intent godevice = new Intent(MainActivity.this,device.class);
-                startActivity(godevice);
-            }
-        });
-        buttont = (Button) findViewById(R.id.buttont);
-        buttont.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent gotest2 = new Intent(MainActivity.this,test2.class);
-                startActivity(gotest2);
-            }
-        });
-
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goaddfriend = new Intent(MainActivity.this,addfriend.class);
-                startActivity(goaddfriend);
-            }
-        });
-        commadStr = LocationManager.GPS_PROVIDER;
-        button3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    // Activity#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                            MY_PERMISSION_ACCESS_COARSE_LOCATION);
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for Activity#requestPermissions for more details.
-                    return;
+            public void onSuccess(Location location) 
+            {
+                if(location!=null)
+                {
+                    currentLocation = location;
+                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude()+""+currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+                    SupportMapFragment supportMapFragment = (SupportMapFragment)
+                            getSupportFragmentManager().findFragmentById(R.id.google_map);
+                    supportMapFragment.getMapAsync(MainActivity.this);
                 }
-                locationManager.requestLocationUpdates(commadStr, 1000, 0, locationListener);
-                Location location = locationManager.getLastKnownLocation(commadStr);
-                if (location != null)
-                    textView.setText("經度" + location.getLongitude() + "\n緯度" + location.getLatitude());
-                else
-                    textView.setText("定位中");
             }
         });
     }
+
     private BottomNavigationView.OnNavigationItemSelectedListener navlistener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -111,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId())
             {
                 case R.id.action_home:
-                    selectedFragment = new HomeFragment();
+                    selectedFragment = new HistoryFragment();
                     break;
                 case R.id.action_friend:
                     selectedFragment = new FriendFragment();
@@ -127,17 +104,24 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     };
-    public LocationListener locationListener= new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            textView.setText("經度:"+location.getLongitude()+"\n緯度:"+location.getLatitude());
-        }
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) { }
-        @Override
-        public void onProviderEnabled(String provider) { }
-        @Override
-        public void onProviderDisabled(String provider) { }
-    };
 
+    @Override
+    public void onMapReady(GoogleMap googleMap)
+    {
+        LatLng latLng = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("I Am Here.");
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,5));
+        googleMap.addMarker(markerOptions);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode)
+        {
+            case REQUEST_CODE:
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                { fetchLastLocation(); }
+                break;
+        }
+    }
 }

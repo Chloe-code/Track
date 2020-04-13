@@ -17,7 +17,7 @@
 
     <Button
         android:id="@+id/btn_change"
-        android:text="点击更换头像"
+        android:text="點擊更換頭像"
         android:layout_marginTop="28dp"
         android:layout_marginRight="8dp"
         android:textColor="@color/colorPrimary"

@@ -3,13 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_green_light">
+    android:background="#FFFFFF">
+
+    <include layout="@layout/toolbar"/>
+
+    <ImageButton
+        android:id="@+id/searchbtn"
+        android:layout_width="78dp"
+        android:layout_height="76dp"
+        android:layout_marginStart="300dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/ic_search_black_24dp" />
 
     <TextView
-        android:id="@+id/text_history"
-        android:text="history"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textSize="30sp" />
+        android:id="@+id/tvSelectedDate"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="-300dp"
+        android:layout_marginTop="100dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="30sp"
+        android:textStyle="italic|bold"
+        android:layout_marginLeft="-300dp" />
 </RelativeLayout>
