@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.addMarker(markerOptions);
     }
     void testbranch() {
-        Log.d("test","測試分支3功能");
+        Log.d("test","測試分支2功能");
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
