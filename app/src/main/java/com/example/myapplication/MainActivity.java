@@ -35,8 +35,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.w3c.dom.ls.LSException;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-
+public class MainActivity extends AppCompatActivity {
+    //implements OnMapReadyCallback
     Toolbar toolbar;
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -53,10 +53,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        fetchLastLocation();
+        //fetchLastLocation();
     }
 
-    private void fetchLastLocation()
+    /*private void fetchLastLocation()
     {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
-    }
+    }*/
 
     private BottomNavigationView.OnNavigationItemSelectedListener navlistener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             switch (item.getItemId())
             {
                 case R.id.action_home:
-                    selectedFragment = new HistoryFragment();
+                    selectedFragment = new HomeFragment();
                     break;
                 case R.id.action_friend:
                     selectedFragment = new FriendFragment();
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     };
 
-    @Override
+    /*@Override
     public void onMapReady(GoogleMap googleMap)
     {
         LatLng latLng = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
@@ -114,14 +114,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,5));
         googleMap.addMarker(markerOptions);
     }
-    void testbranch() {
-        Log.d("test","測試功能");
-    }
 
-   public void test2()
-   {
-
-   }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode)
@@ -131,5 +124,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 { fetchLastLocation(); }
                 break;
         }
-    }
+    }*/
 }
