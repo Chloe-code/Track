@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }*/
+    public void test()
+    {}
 
     private BottomNavigationView.OnNavigationItemSelectedListener navlistener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
