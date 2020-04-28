@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#FFFFFF"
-    android:minHeight="?attr/actionBarSize"
     android:contentInsetStart="0dp"
-    android:id="@+id/toolbar">
+    android:minHeight="?attr/actionBarSize">
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:text="TrackDear"
         android:textColor="#707070"
-        android:textSize="33sp" />
+        android:textSize="28sp" />
+    <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="right"
+        android:background="#00000000"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/ic_line" />
+
 
 </androidx.appcompat.widget.Toolbar>

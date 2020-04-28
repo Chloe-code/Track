@@ -21,6 +21,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GoogleApiAvailabilityLight;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,7 +38,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.w3c.dom.ls.LSException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
     //implements OnMapReadyCallback
     Toolbar toolbar;
     Location currentLocation;
@@ -53,10 +56,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        //fetchLastLocation();
+        fetchLastLocation();
     }
-
-    /*private void fetchLastLocation()
+    private void fetchLastLocation()
     {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
@@ -79,9 +81,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }*/
-    public void test3()
-    {}
+    }
+    /*public void test3()
+    {}*/
 
     private BottomNavigationView.OnNavigationItemSelectedListener navlistener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    /*@Override
+    @Override
     public void onMapReady(GoogleMap googleMap)
     {
         LatLng latLng = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
@@ -126,5 +128,5 @@ public class MainActivity extends AppCompatActivity {
                 { fetchLastLocation(); }
                 break;
         }
-    }*/
+    }
 }

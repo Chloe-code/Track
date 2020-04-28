@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/action_home"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/ic_home_map"
         android:title="目前位置"/>
 
     <item
