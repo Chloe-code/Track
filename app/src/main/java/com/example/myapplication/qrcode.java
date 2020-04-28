@@ -36,11 +36,10 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
         imageView9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent gohome = new Intent(qrcode.this,MainActivity.class);
-                startActivity(gohome);
+                Intent goback = new Intent(qrcode.this,addfriend.class);
+                startActivity(goback);
             }
         });
-
     }
 
     @Override
@@ -48,8 +47,6 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
         super.onPause();
         mScannerView.stopCamera();
     }
-
-
     @Override
     public void handleResult(Result rawResult) {
         Log.w("handleResult", rawResult.getText());
@@ -57,8 +54,5 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
         builder.setMessage(rawResult.getText());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-
-
     }
-
 }
