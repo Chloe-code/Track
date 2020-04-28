@@ -8,12 +8,32 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class FriendFragment extends Fragment
 {
-    @Nullable
+    RecyclerView mUserList;
+
+    String s1[], s2[];
+    int image[]= {R.drawable.ic_people};
+
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_friend,container, false);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_friend);
+
+        mUserList = findViewById(R.id.fri_list);
+
+
+
+        RecyclerViewAdapter myAdapter = new RecyclerViewAdapter(this, image,s1,s2);
+        mUserList.setAdapter(myAdapter);
+        mUserList.setLayoutManager(new LinearLayoutManager(this));
+
+
+
+        }
     }
 }

@@ -51,6 +51,7 @@ import com.google.android.material.navigation.NavigationView;
 import org.w3c.dom.ls.LSException;
 
 public class MainActivity extends AppCompatActivity {
+    //implements OnMapReadyCallback
     Toolbar toolbar;
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient fusedLocationProviderClient;

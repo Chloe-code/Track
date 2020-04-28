@@ -5,12 +5,19 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
+    <include layout="@layout/toolbar_fri"></include>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fri_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/users_appBar" />
     <Button
         android:id="@+id/btn"
         android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/fri_list"
         android:text="open message"/>
         <!--這裡open message的按鈕位置，我先幫你把它改成android:layout_below="@+id/toolbar"在toolbar之下-->
 </RelativeLayout>
