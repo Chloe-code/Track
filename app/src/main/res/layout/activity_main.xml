@@ -14,17 +14,18 @@
         android:id="@+id/drawerLayout"
         android:fitsSystemWindows="false"
         tools:openDrawer="start">
+        <include layout="@layout/mapfragment"/>
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar"
             android:layout_above="@+id/bottom_navigation">
-            <include layout="@layout/fragment_home"/>
         </FrameLayout>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/setview"
+            android:background="#FFFFFF"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginEnd="-65dp"
@@ -44,11 +45,5 @@
     android:background="#FFFFFF"
     app:menu="@menu/menubottom"/>
 
-    <fragment
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@+id/toolbar"
-    android:layout_above="@+id/bottom_navigation"
-    android:id="@+id/google_map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
 </RelativeLayout>

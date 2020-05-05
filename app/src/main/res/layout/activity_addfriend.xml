@@ -5,9 +5,9 @@
     android:id="@+id/Relativelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_below="@+id/toolbar"
     tools:context=".addfriend">
 
-    <include layout="@layout/toolbar"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

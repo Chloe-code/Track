@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -57,7 +59,10 @@ public class MainActivity extends AppCompatActivity {
     FusedLocationProviderClient fusedLocationProviderClient;
     DrawerLayout drawerLayout;
     ImageButton menuRight;
-
+    private Fragment mhomefragment=null;
+    private Fragment mfriendfragment=null;
+    private Fragment mhistoryfragment=null;
+    private Fragment mnoticefragment=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +106,14 @@ public class MainActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
         }
-
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new HomeFragment()).commit();
+        };
+        mhomefragment=new HomeFragment();
+        mfriendfragment=new FriendFragment();
+        mhistoryfragment=new HistoryFragment();
+        mnoticefragment=new NoticeFragment();
     }
     private void getCurrentLocation() {
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
@@ -136,21 +148,43 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedFragment = null;
+            FragmentManager fragmentManager = getFragmentManager();
             switch (item.getItemId()) {
                 case R.id.action_home:
-                    selectedFragment = new HomeFragment();
+                    getSupportFragmentManager().beginTransaction().remove(mfriendfragment).commit();
+                    getSupportFragmentManager().beginTransaction().remove(mhistoryfragment).commit();
+                    getSupportFragmentManager().beginTransaction().remove(mnoticefragment).commit();
+                    if (!mhomefragment.isAdded()) {
+                        getSupportFragmentManager().beginTransaction().add(R.id.google_map, mhomefragment).commit();
+                    }
                     break;
                 case R.id.action_friend:
-                    selectedFragment = new FriendFragment();
+                    getSupportFragmentManager().beginTransaction().remove(mhomefragment).commit();
+                    getSupportFragmentManager().beginTransaction().remove(mhistoryfragment).commit();
+                    getSupportFragmentManager().beginTransaction().remove(mnoticefragment).commit();
+                    if (!mfriendfragment.isAdded()) {
+                        getSupportFragmentManager().beginTransaction().add(R.id.google_map, mfriendfragment).commit();
+                    }
                     break;
                 case R.id.action_history:
-                    selectedFragment = new HistoryFragment();
+                    getSupportFragmentManager().beginTransaction().remove(mhomefragment).commit();
+                    getSupportFragmentManager().beginTransaction().remove(mfriendfragment).commit();
+                    getSupportFragmentManager().beginTransaction().remove(mnoticefragment).commit();
+                    if (!mhistoryfragment.isAdded()) {
+                        getSupportFragmentManager().beginTransaction().add(R.id.google_map, mhistoryfragment).commit();
+                    }
                     break;
                 case R.id.action_notice:
-                    selectedFragment = new NoticeFragment();
+                    getSupportFragmentManager().beginTransaction().remove(mhomefragment).commit();
+                    getSupportFragmentManager().beginTransaction().remove(mhistoryfragment).commit();
+                    getSupportFragmentManager().beginTransaction().remove(mfriendfragment).commit();
+                    if (!mnoticefragment.isAdded()) {
+                        getSupportFragmentManager().beginTransaction().add(R.id.google_map, mnoticefragment).commit();
+                    }
                     break;
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            //getSupportFragmentManager().beginTransaction().add(R.id.google_map, selectedFragment).commit();
             return true;
         }
     };

@@ -22,7 +22,7 @@ public class FriendFragment extends Fragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_friend);
+        /*setContentView(R.layout.fragment_friend);
 
         mUserList = findViewById(R.id.fri_list);
 
@@ -34,6 +34,6 @@ public class FriendFragment extends Fragment
 
 
 
-        }
+        }*/
     }
 }

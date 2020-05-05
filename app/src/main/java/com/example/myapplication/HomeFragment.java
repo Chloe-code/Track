@@ -51,22 +51,21 @@ public class HomeFragment extends Fragment
                 startActivity(gotest2);
             }
         });
-
-        button = (Button) getView().findViewById(R.id.button);
+        /*button = (Button) getView().findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent goaddfriend = new Intent(getActivity(), addfriend.class);
                 startActivity(goaddfriend);
             }
-        });
+        });*/
 
-        /*fabbtn = (FloatingActionButton) getView().findViewById(R.id.fab);
+        fabbtn = (FloatingActionButton) getView().findViewById(R.id.button);
         fabbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), addfriend.class));
             }
-        });*/
+        });
     }
 }
