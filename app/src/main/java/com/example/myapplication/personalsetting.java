@@ -19,12 +19,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -33,10 +35,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Button;
@@ -53,6 +58,7 @@ import java.util.Calendar;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
+import static java.lang.Thread.sleep;
 
 public class personalsetting extends AppCompatActivity
 {
@@ -61,20 +67,27 @@ public class personalsetting extends AppCompatActivity
     TextView datepick;
     EditText meditText;
     DatePickerDialog.OnDateSetListener setListener;
-
-    private CircleImageView circleimageview;
     private Button buttonsave;
+    private CircleImageView circleimageview;
     public static final String TAG="MyLog";
-    private static final  int REQUEST_CAMERA_CAPTURE=1;
-    private static final  int REQUEST_IMAGE_CAPTURE=2;
-    public static final int TAKE_PHOTO = 111;
-    private File imagePath;
-    private ImageView imageView6,imageView9;
+    private ImageView imageView6,imageView9,male,female;
     private ConstraintLayout layout1, layout2;
-    //private RelativeLayout ;
     SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
     String startText = "";
-    private Uri uri;
+    private Uri iconUri = null;
+    private Uri cropImageUri = null;
+    public static final String imageDirPath = "/sdcard/TrackDear";
+    public static final String crop_ImageName = "crop_image.jpg";
+    private static final int REQUEST_CODE_TAKE_PHOTO = 0;
+    private static final int REQUEST_CODE_CHOOSE_IMAGE = 1;
+    private static final int REQUEST_CODE_CROP_IMAGE = 2;
+    private EditText name,phone,email,intro;
+    private TextView birth;
+    byte[] byteArray;
+    String encodedImage;
+    Handler handler;
+    private String lineu=null;
+    private String line2=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -160,21 +173,11 @@ public class personalsetting extends AppCompatActivity
                             })
                             .setPositiveButton("取消",null)
                             .show();
-
                 }
-                /*Intent gopersonaledit = new Intent(personalsetting.this,personaledit.class);
-                startActivity(gopersonaledit);*/
             }
         });
 
         buttonsave = (Button) findViewById(R.id.buttonsave);
-        buttonsave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent gopersonaledit = new Intent(personalsetting.this,personaledit.class);
-                startActivity(gopersonaledit);
-            }
-        });
         layout1 = findViewById(R.id.person1);
         layout1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,164 +209,118 @@ public class personalsetting extends AppCompatActivity
                 mwindow.showAtLocation(personalsetting.this.findViewById(R.id.person1), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
             }
         });
+        name = (EditText) findViewById(R.id.editText7);
+        email = (EditText) findViewById(R.id.editText11);
+        phone = (EditText) findViewById(R.id.editText8);
+        birth = (TextView) findViewById(R.id.textView);
+        intro = (EditText) findViewById(R.id.editText10);
+        male = (ImageView) findViewById(R.id.imageviewmale);
+        female = (ImageView) findViewById(R.id.imageviewfemale);
+        handler = new Handler();
+        new Thread() {
+            public void run() {
+                line2 = ws_test2.personinfoselect("Apple@gmail.com");
+                handler.post(runnableUi2);
+            }
+        }.start();
     }
-    private View.OnClickListener itemsOnClick = new View.OnClickListener(){
-
+    private View.OnClickListener itemsOnClick = new View.OnClickListener()
+    {
         public void onClick(View v) {
             mwindow.dismiss();
             switch (v.getId()) {
                 case R.id.icon_btn_camera:
-                    takePhoto();
+                    File dir = new File(imageDirPath);
+                    if(!dir.exists()){
+                        dir.mkdirs();
+                    }
+                    String fileName = System.currentTimeMillis() + ".jpg";
+                    File file = new File(dir,fileName);
+                    Log.e("相機存放圖片地址",file.getAbsolutePath());
+                    iconUri = provider.getUriForFile(personalsetting.this,file);
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, iconUri);
+                    startActivityForResult(intent, REQUEST_CODE_TAKE_PHOTO);
+                    break;
                 case R.id.icon_btn_choose:
-                    choosePhoto();
+                    Intent intent2 = new Intent(Intent.ACTION_PICK, null);
+                    intent2.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                    startActivityForResult(intent2, REQUEST_CODE_CHOOSE_IMAGE);
+                    break;
                 default:
                     break;
             }
         }
     };
-
-    public void takePhoto(View view) {takePhoto();}
-    public void choosePhoto(View view){choosePhoto();}
-    public void myCamera(View view){myCamera(view);}
-
-    private String takePicture = Environment.getExternalStorageDirectory().toString()+ "moon/images" ;
-            //getExternalStorageDirectory(
-    private String picturePath = "take_photo.jpg";
-    /*public void takePhoto() {
-        Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        if (!imagePath.exists()) {
-            imagePath.mkdirs();
-        }
-        imagePath = new File(takePicture, "/temp.jpg");
-        picturePath = takePicture + "/temp.jpg";
-        if (imagePath != null) {
-            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imagePath));
-            startActivityForResult(captureIntent, TAKE_PHOTO);
-        }
-    }*/
-
-
-    /*private void takePhoto()
-    {
-        if(hasSdcard())
-        { Environment.DIRECTORY_PICTURES };
-            Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES);
-            if (!imagePath.exists())
-            {imagePath.mkdirs();}
-            imagePath = new File(imagePath.getPath() + "/" + "temp.png");
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (intent.resolveActivity(getPackageManager()) != null)
-            {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imagePath));
-                startActivityForResult(intent, REQUEST_CAMERA_CAPTURE);
-            }
-    }*/
-
-    /*private void takePhoto()
-    {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, 100);
-    }*/
-
-
-    private void takePhoto() {
-        //File imagePath = new File(takePicture, System.currentTimeMillis() + ".jpg");
-        File vDirPath = new File(takePicture);
-        if (!vDirPath.exists()) {
-            //File vDirPath = imagePath.getParentFile();
-            //if (!vDirPath.exists())
-            { vDirPath.mkdirs(); }
-        }
-        File file = new File(vDirPath,takePicture);//指定拍照后相片保存地址，以覆盖方式保存。
-        Log.e("相機存放圖片地址",file.getAbsolutePath());
-        uri = Uri.fromFile(file);
-        // 启动相机
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // 设置输出路径
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        startActivityForResult(intent, REQUEST_CAMERA_CAPTURE);
-        /*if (hasSdcard()) {
-            try {
-                picturePath = imagePath.getPath();
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imagePath));
-                startActivityForResult(intent, REQUEST_CAMERA_CAPTURE);
-            } catch (Exception e) {
-                Toast.makeText(this, "未找到系統相機程式", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, "沒有找的記憶體卡", Toast.LENGTH_SHORT).show();
-        }*/
-    }
-
-    private void choosePhoto()
-    {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        if(intent.resolveActivity(getPackageManager()) != null)
-        {startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);}
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_CAMERA_CAPTURE&&resultCode==RESULT_OK){
-            FileInputStream fis = null;
-            try
-            {
-                fis=new FileInputStream(imagePath);
-                Bitmap bitmap= BitmapFactory.decodeStream(fis);
-                circleimageview.setImageBitmap(bitmap);
-            } catch (FileNotFoundException e) {e.printStackTrace();}
-            finally
-            {
-                try{fis.close();} catch (IOException e) {e.printStackTrace();}
-            }
+        if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(personalsetting.this,imageDirPath,Toast.LENGTH_SHORT).show();
+            return;
         }
-        else if(requestCode==REQUEST_IMAGE_CAPTURE&&resultCode==RESULT_OK)
-        {
-            Uri uri=data.getData();
-            circleimageview.setImageURI(uri);
+        switch (requestCode){
+            case REQUEST_CODE_TAKE_PHOTO:
+                if(null != iconUri){
+                    Intent it = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,iconUri);
+                    sendBroadcast(it);
+                    File file = new File(iconUri.getPath());
+                    Log.e("文件是否存在",file.exists()+"");
+                    if (file.exists()) {
+                        startCropImage(iconUri);
+                    }
+                }
+                break;
+            case REQUEST_CODE_CHOOSE_IMAGE:
+                Log.e("相簿選擇",data.getData()+"");
+                if (data.getData() != null) {
+                    iconUri = data.getData();
+                    startCropImage(iconUri);
+                }
+                break;
+            case REQUEST_CODE_CROP_IMAGE:
+                Toast.makeText(personalsetting.this,"剪切完畢",Toast.LENGTH_SHORT).show();
+                if(null !=cropImageUri){
+                    Log.e("剪切圖片地址",cropImageUri.getPath());
+                    Bitmap bitmap = BitmapFactory.decodeFile(imageDirPath+File.separator+crop_ImageName);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    circleimageview.setImageBitmap(bitmap);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
+                    byteArray = stream.toByteArray();
+                    encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    bitmap.recycle();
+                }
+                break;
         }
     }
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-
-            if (requestCode == TAKE_PHOTO) {
-                FileInputStream fis = null;
-                try
-                {
-                    fis=new FileInputStream(imagePath);
-                    Bitmap bitmap= BitmapFactory.decodeStream(fis);
-                    circleimageview.setImageBitmap(bitmap);
-                } catch (FileNotFoundException e) {e.printStackTrace();}
-                finally
-                {
-                    try{fis.close();} catch (IOException e) {e.printStackTrace();}
-                }
-            }
+    public void startCropImage(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("scale", true);
+        intent.putExtra("outputX", 300);
+        intent.putExtra("outputY", 300);
+        File dir = new File(imageDirPath);
+        if(!dir.exists()){
+            dir.mkdirs();
         }
-
-    }*/
-
-    private boolean hasSdcard()
-    {
-        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
-        {return true;}
-        else
-        {return false;}
+        File crop_image = new File(dir,crop_ImageName);
+        cropImageUri = provider.getUriForFile(personalsetting.this,crop_image);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cropImageUri);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("return-data", false);
+        intent.putExtra("noFaceDetection", false);
+        startActivityForResult(intent, REQUEST_CODE_CROP_IMAGE);
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode==KeyEvent.KEYCODE_BACK){
             AlertDialog.Builder builder=new AlertDialog.Builder(this);
             builder.setTitle("確定退出 ?");
-            builder.setMessage("現在返回"+"/n"+"已變更的資料將不會儲存");
+            builder.setMessage("現在返回"+"/n已變更的資料將不會儲存");
             builder.setNegativeButton("確定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which)
@@ -374,5 +331,62 @@ public class personalsetting extends AppCompatActivity
         }
         return super.onKeyDown(keyCode, event);
     }
+    public void maleclick(View view)
+    {
+        male.setVisibility(View.VISIBLE);
+        female.setVisibility(View.INVISIBLE);
+    }
+    public void femaleclick(View view)
+    {
+        male.setVisibility(View.INVISIBLE);
+        female.setVisibility(View.VISIBLE);
+    }
+    public void update(View view)
+    {
+        new Thread() {
+            public void run() {
+                //if(male.getVisibility()==View.VISIBLE)
+                //{
+                    lineu = ws_test2.personinfoupdate(name.getText().toString(),email.getText().toString(),phone.getText().toString(),birth.getText().toString(),"男",intro.getText().toString(),encodedImage);
+                //}
+                /*if(female.getVisibility()==View.VISIBLE)
+                {
+                    lineu = ws_test2.personinfoupdate(name.getText().toString(),email.getText().toString(),phone.getText().toString(),birth.getText().toString(),"女",intro.getText().toString(),encodedImage);
+                }*/
+                handler.post(runnableUi);
+            }
+        }.start();
+    }
+
+    Runnable runnableUi = new Runnable()
+    {
+        @Override
+        public void run() {
+            if (lineu.equals("error")==false) {
+                //Toast.makeText(this,"更新完成",Toast.LENGTH_SHORT).show();
+                personalsetting.this.finish();
+            }
+        }
+    };
+    Runnable runnableUi2 = new Runnable()
+    {
+        @Override
+        public void run() {
+            if (line2.equals("error")==false) {
+                String[] split_line2 = line2.split("%");
+                name.setText(split_line2[0]);
+                email.setText(split_line2[1]);
+                phone.setText(split_line2[2]);
+                birth.setText(split_line2[3]);
+                if(split_line2[4].equals("女")==true)
+                { female.setVisibility(View.VISIBLE);}
+                else { male.setVisibility(View.VISIBLE);}
+                intro.setText(split_line2[5]);
+                byteArray = Base64.decode(split_line2[6], Base64.DEFAULT);
+                Bitmap decodedImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                circleimageview.setImageBitmap(decodedImage);
+            }
+        }
+    };
 
 }

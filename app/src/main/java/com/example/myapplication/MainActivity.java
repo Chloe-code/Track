@@ -16,6 +16,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment mfriendfragment=null;
     private Fragment mhistoryfragment=null;
     private Fragment mnoticefragment=null;
+    public MarkerOptions markerOptions2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,14 +109,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
         }
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new HomeFragment()).commit();
-        };
         mhomefragment=new HomeFragment();
         mfriendfragment=new FriendFragment();
         mhistoryfragment=new HistoryFragment();
         mnoticefragment=new NoticeFragment();
+        setDefaultFragment();
     }
     private void getCurrentLocation() {
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
@@ -123,12 +123,14 @@ public class MainActivity extends AppCompatActivity {
                 if (location != null) {
                     supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                         @Override
-                        public void onMapReady(GoogleMap googleMap) {
+                        public void onMapReady(final GoogleMap googleMap) {
                             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                             MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("I Am Here.");
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                            googleMap.addMarker(markerOptions);
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                            googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                            googleMap.setMyLocationEnabled(true);
+                            //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                            googleMap.addMarker(markerOptions2);
                         }
                     });
                 }
@@ -239,5 +241,23 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     };
+    private void setDefaultFragment()
+    { getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mhomefragment).commit(); }
 
+    public void onStart()
+    {
+        super.onStart();
+        //WebService呼叫必須用Thread包著
+        Thread thread = new Thread(){
+            public void run() {
+                String line = ws_test2.select_devicelocation("1");
+                if (line.equals("error")==false) {
+                    String[] split_line = line.split("%");
+                    LatLng latLng2 = new LatLng(Double.parseDouble(split_line[4]), Double.parseDouble(split_line[5]));
+                    markerOptions2 = new MarkerOptions().position(latLng2).title("I Am Here.");
+                }
+            }
+        };
+        thread.start();
+    }
 }
