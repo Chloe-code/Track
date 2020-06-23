@@ -1,22 +1,29 @@
 package com.example.myapplication;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -24,11 +31,14 @@ import android.os.Bundle;
 import android.text.Layout;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -43,6 +53,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -53,6 +65,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import org.w3c.dom.ls.LSException;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
     //implements OnMapReadyCallback
@@ -65,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment mfriendfragment=null;
     private Fragment mhistoryfragment=null;
     private Fragment mnoticefragment=null;
-    public MarkerOptions markerOptions2;
+    public MarkerOptions markerOptions2,markerOptions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,10 +139,11 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onMapReady(final GoogleMap googleMap) {
                             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("I Am Here.");
+                            markerOptions = new MarkerOptions().position(latLng).title("I Am Here.").icon(bitmapDescriptorFromVector(MainActivity.this,R.drawable.ic_user));
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                             googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-                            googleMap.setMyLocationEnabled(true);
+                            //googleMap.setMyLocationEnabled(true);
+                            googleMap.addMarker(markerOptions);
                             //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                             googleMap.addMarker(markerOptions2);
                         }
@@ -250,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
         //WebService呼叫必須用Thread包著
         Thread thread = new Thread(){
             public void run() {
-                String line = ws_test2.select_devicelocation("1");
+                String line = ws_test2.select_devicelocation("IM-235-TD001");
                 if (line.equals("error")==false) {
                     String[] split_line = line.split("%");
                     LatLng latLng2 = new LatLng(Double.parseDouble(split_line[4]), Double.parseDouble(split_line[5]));
@@ -260,4 +275,15 @@ public class MainActivity extends AppCompatActivity {
         };
         thread.start();
     }
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes  int vectorDrawableResourceId) {
+        Drawable background = ContextCompat.getDrawable(context, R.drawable.ic_person_pin_circle_black_24dp);
+        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        vectorDrawable.setBounds(40, 20, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
+        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        background.draw(canvas);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }//之後再考慮使用者本身要用什麼圖案標記在地圖上
 }

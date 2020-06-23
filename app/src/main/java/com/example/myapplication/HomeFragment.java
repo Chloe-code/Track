@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ExpandableListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -37,10 +39,11 @@ public class HomeFragment extends Fragment
     private RecyclerView recyclerView;
     private homeRecyclerAdapter homerecyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    ArrayList<String> title,photo;
+    //ArrayList<String> title,photo;
+    List<homeRecyclerAdapter.Item> title;
     Handler handler;
-    private String line0=null;
-    private String line1=null;
+    private String line0=null, line00=null, devicelist=null;
+    private String line1=null, line10=null;
     private String line2=null;
     @Nullable
     @Override
@@ -107,7 +110,7 @@ public class HomeFragment extends Fragment
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
         googleMap.addMarker(markerOptions);
     }*/
-    private void homere()
+    /*private void homere()
     {
         new Thread() {
             public void run() {
@@ -126,11 +129,41 @@ public class HomeFragment extends Fragment
                 }
             }
         }.start();
-    }
+    }*/
     private void initData()
     {
-
         new Thread() {
+            public void run() {
+                line0 = ws_test2.personinfoselect("Apple@gmail.com");
+                devicelist = ws_test2.homerecyclrview2("Apple@gmail.com");
+                line00 = ws_test2.deviceinfoselect(devicelist);
+                if (line0.equals("error")==false) {
+                    String[] split_line0 = line0.split("%");
+                    String[] split_line00 = line00.split("%");
+                    title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.HEADER, split_line0[0].replaceAll("\\s",""),split_line0[6]));
+                    title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.CHILD, split_line00[0].replaceAll("\\s",""),split_line00[6]));
+                }
+                line1 = ws_test2.homerecyclrview("Apple");
+                if (line1.equals("error") == false) {
+                    String[] split_line = line1.split("%");
+                    for (int i = 0; i < split_line.length; i++) {
+                        line2 = ws_test2.personinfoselect(split_line[i]);
+                        devicelist = ws_test2.homerecyclrview2(split_line[i]);
+                        line10 = ws_test2.deviceinfoselect(devicelist);
+                        if (line2.equals("error") == false) {
+                            String[] split_line2 = line2.split("%");
+                            title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.HEADER, split_line2[0].replaceAll("\\s",""),split_line2[6]));
+                            if(line10.equals("error")==false)
+                            {
+                                String[] split_line22 = line10.split("%");
+                                title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.CHILD, split_line22[0].replaceAll("\\s",""),split_line22[6]));
+                            }
+                        }
+                    }
+                }
+            }
+        }.start();
+        /*new Thread() {
             public void run() {
                 line1 = ws_test2.homerecyclrview("Apple");
                 if (line1.equals("error") == false) {
@@ -140,42 +173,33 @@ public class HomeFragment extends Fragment
                         if (line2.equals("error") == false) {
                             //String[] split_line2=null;
                             String[] split_line2 = line2.split("%");
-                            title.add(split_line2[0].replaceAll("\\s+",""));
+                            title.add(split_line2[0].replaceAll("\\s+", ""));
                             photo.add(split_line2[6]);
                         }
                     }
                 }
             }
-        }.start();
-        new Thread() {
-            public void run() {
-                line0 = ws_test2.personinfoselect("Apple@gmail.com");
-                if (line0.equals("error")==false) {
-                    String[] split_line0 = line0.split("%");
-                    title.add(split_line0[0].replaceAll("\\s",""));
-                    photo.add(split_line0[6]);
-                }
-            }
-        }.start();
+        }.start();*/
     }
     private void RecyclerView()
     {
-        //获取RecyclerView
+        //獲取RecyclerView
         title = new ArrayList<>();
-        photo = new ArrayList<>();
+        //photo = new ArrayList<>();
         recyclerView=(RecyclerView)view.findViewById(R.id.recyclerView);
-        //创建adapter
-        homerecyclerAdapter = new homeRecyclerAdapter(getActivity(),title,photo);
-        //给RecyclerView设置adapter
-        recyclerView.setAdapter(homerecyclerAdapter);
-        //设置layoutManager,可以设置显示效果，是线性布局、grid布局，还是瀑布流布局
-        //参数是：上下文、列表方向（横向还是纵向）、是否倒叙
+        //創建adapter
+        //homerecyclerAdapter = new homeRecyclerAdapter(getActivity(),title,photo);
+        //給RecyclerView設置adapter
+        //recyclerView.setAdapter(homerecyclerAdapter);
+        //設置layoutManager,可以設置顯示效果，是線性布局、grid布局，還是瀑布流布局
+        //參數是：上下文、列表方向（横向還是縱向）、是否倒敘
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        //RecyclerView中没有item的监听事件，需要自己在适配器中写一个监听事件的接口。参数根据自定义
+        recyclerView.setAdapter(new homeRecyclerAdapter(title));
+        //RecyclerView中没有item的監聽事件，需要自己在適配器中寫一個監聽事件的接口。參數根據自定義
         /*homerecyclerAdapter.setOnItemClickListener(new homerecycleAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(View view, GoodsEntity data) {
-                //此处进行监听事件的业务处理
+                //此處進行監聽事件的業務處理
                 Toast.makeText(getActivity(),"我是item",Toast.LENGTH_SHORT).show();
             }
         });*/
