@@ -238,4 +238,30 @@ public class ws_test2
             return e.toString();
         }
     }
+    public static String signupornot(String email)
+    {
+        String SOAP_ACTION = " http://tempuri.org/signupornot";          //命名空間+要用的函數名稱
+        String METHOD_NAME = "signupornot";
+        //必須用try catch包著
+        try {
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            request.addProperty("Email",email);
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.bodyOut = request;
+            envelope.dotNet = true;//若WS有輸入參數必須要加這一行否則WS沒反應
+            envelope.setOutputSoapObject(request);
+            envelope.encodingStyle = "utf-8";
+            HttpTransportSE ht = new HttpTransportSE(URL);
+            ht.call(SOAP_ACTION, envelope);
+
+            // 獲取回傳數據
+            SoapObject object = (SoapObject) envelope.bodyIn;
+            // 獲取返回的結果
+            String result = object.getProperty(0).toString();
+            return result;
+        } catch (Exception e) {
+            return e.toString();
+        }
+    }
 }

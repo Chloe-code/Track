@@ -5,37 +5,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#00FFFFFF">
 
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/toolbar"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/editname2"
-        android:id="@+id/addbuttonalign"
-        android:padding="1dp">
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:elevation="0dp"
-            app:elevation="0dp"
-            app:fabSize="mini"
-            app:borderWidth="0dp"
-            android:scaleType="fitCenter"
-            android:backgroundTint="#FFFFFF"
-            app:rippleColor="#00000000"
-            app:srcCompat="@drawable/ic_add2"/>
-    </LinearLayout>
+        app:civ_circle_background_color="#FFFFFF"
+        android:src="@drawable/ic_add"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_toEndOf="@+id/addbuttonalign"
-        android:layout_margin="10dp">
+        android:layout_toEndOf="@+id/button"
+        android:background="@drawable/transparentgradient"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -43,7 +29,7 @@
             android:layout_alignParentTop="true"/>
     </LinearLayout>
 
-    <Button
+    <!--<Button
         android:id="@+id/button4"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
@@ -76,7 +62,7 @@
         android:text="test"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
 
 

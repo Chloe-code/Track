@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +35,7 @@ public class HomeFragment extends Fragment
 {
     private View view;
     private Button button, button4, button5, buttont;
-    private FloatingActionButton fabbtn;
+    private CircleImageView addfriendbutton;
     SupportMapFragment supportMapFragment;
     private RecyclerView recyclerView;
     private homeRecyclerAdapter homerecyclerAdapter;
@@ -51,16 +52,14 @@ public class HomeFragment extends Fragment
 
         view = inflater.inflate(R.layout.fragment_home,container, false);
         //homere();
-        initData();
-        RecyclerView();
-        handler = new Handler();
         return view;
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-        button4 = (Button) getView().findViewById(R.id.button4);
+        /*button4 = (Button) getView().findViewById(R.id.button4);
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +83,7 @@ public class HomeFragment extends Fragment
                 Intent gotest2 = new Intent(getActivity(), test2.class);
                 startActivity(gotest2);
             }
-        });
+        });*/
         /*button = (Button) getView().findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,8 +93,8 @@ public class HomeFragment extends Fragment
             }
         });*/
 
-        fabbtn = (FloatingActionButton) getView().findViewById(R.id.button);
-        fabbtn.setOnClickListener(new View.OnClickListener() {
+        addfriendbutton = (CircleImageView) getView().findViewById(R.id.button);
+        addfriendbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), addfriend.class));
@@ -130,6 +129,15 @@ public class HomeFragment extends Fragment
             }
         }.start();
     }*/
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initData();
+        RecyclerView();
+        handler = new Handler();
+    }
+
     private void initData()
     {
         new Thread() {
@@ -141,7 +149,7 @@ public class HomeFragment extends Fragment
                     String[] split_line0 = line0.split("%");
                     String[] split_line00 = line00.split("%");
                     title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.HEADER, split_line0[0].replaceAll("\\s",""),split_line0[6]));
-                    title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.CHILD, split_line00[0].replaceAll("\\s",""),split_line00[6]));
+                    title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.CHILD, split_line00[0].replaceAll("\\s",""),split_line00[7]));
                 }
                 line1 = ws_test2.homerecyclrview("Apple");
                 if (line1.equals("error") == false) {
@@ -156,7 +164,7 @@ public class HomeFragment extends Fragment
                             if(line10.equals("error")==false)
                             {
                                 String[] split_line22 = line10.split("%");
-                                title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.CHILD, split_line22[0].replaceAll("\\s",""),split_line22[6]));
+                                title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.CHILD, split_line22[0].replaceAll("\\s",""),split_line22[7]));
                             }
                         }
                     }
@@ -194,7 +202,14 @@ public class HomeFragment extends Fragment
         //設置layoutManager,可以設置顯示效果，是線性布局、grid布局，還是瀑布流布局
         //參數是：上下文、列表方向（横向還是縱向）、是否倒敘
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(new homeRecyclerAdapter(title));
+        homeRecyclerAdapter adapter = new homeRecyclerAdapter(title);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new homeRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void OnItemClick(int position) {
+                Toast.makeText(getActivity(), "here", Toast.LENGTH_SHORT).show();
+            }
+        });
         //RecyclerView中没有item的監聽事件，需要自己在適配器中寫一個監聽事件的接口。參數根據自定義
         /*homerecyclerAdapter.setOnItemClickListener(new homerecycleAdapter.OnItemClickListener() {
             @Override

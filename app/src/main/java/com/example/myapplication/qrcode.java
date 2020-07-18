@@ -4,11 +4,23 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.zxing.Result;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -16,19 +28,17 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
 
     private ZXingScannerView mScannerView;
     private ImageView imageView9;
+    private Button qr, qrgenerate;
+    byte[] byteArray;
+    ImageView qrimg;
+    private String line=null;
+    Handler handler;
+    private GoogleSignInAccount googleSignInAccount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode);
 
-
-        RelativeLayout rl = (RelativeLayout) findViewById(R.id.relative_scan_take_single);
-        mScannerView = new ZXingScannerView(this);
-        rl.addView(mScannerView);
-        mScannerView.setResultHandler(this);
-        mScannerView.startCamera();
-        mScannerView.setSquareViewFinder(true);
-        mScannerView.setLaserEnabled(false);
         //mScannerView.setSoundEffectsEnabled(true);
         //mScannerView.setAutoFocus(true);
 
@@ -40,6 +50,38 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
                 startActivity(goback);
             }
         });
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.relative_scan_take_single);
+        mScannerView = new ZXingScannerView(qrcode.this);
+        rl.addView(mScannerView);
+        mScannerView.setResultHandler(qrcode.this);
+        mScannerView.startCamera();
+        mScannerView.setSquareViewFinder(true);
+        mScannerView.setLaserEnabled(false);
+        qr=(Button) findViewById(R.id.button7);
+        qrgenerate=(Button) findViewById(R.id.button8);
+        qr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                qr.setTextColor(Color.parseColor("#000000"));
+                qrgenerate.setTextColor(Color.parseColor("#707070"));
+                RelativeLayout rl = (RelativeLayout) findViewById(R.id.relative_scan_take_single);
+                mScannerView = new ZXingScannerView(qrcode.this);
+                rl.addView(mScannerView);
+                mScannerView.setResultHandler(qrcode.this);
+                mScannerView.startCamera();
+                mScannerView.setSquareViewFinder(true);
+                mScannerView.setLaserEnabled(false);
+            }
+        });
+        qrgenerate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                qrgenerate.setTextColor(Color.parseColor("#000000"));
+                qr.setTextColor(Color.parseColor("#707070"));
+                generate();
+            }
+        });
+        handler = new Handler();
     }
 
     @Override
@@ -55,4 +97,29 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+    private void generate ()
+    {
+        Thread thread = new Thread() {
+            public void run() {
+                line = ws_test2.personinfoselect("Apple@gmail.com");//googleSignInAccount.getEmail()
+                handler.post(runnableUi);
+            }
+        };
+        thread.start();
+    }
+    Runnable runnableUi = new Runnable()
+    {
+        @Override
+        public void run() {
+            if (line.equals("error")==false) {
+                String[] split_line = line.split("%");
+                RelativeLayout r2 = (RelativeLayout) findViewById(R.id.relative_scan_take_single);
+                qrimg = new ImageView(qrcode.this);
+                byteArray = Base64.decode(split_line[7], Base64.DEFAULT);
+                Bitmap decodedImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                qrimg.setImageBitmap(Bitmap.createScaledBitmap(decodedImage, r2.getWidth(), r2.getHeight()-10, false));
+                r2.addView(qrimg);
+            }
+        }
+    };
 }

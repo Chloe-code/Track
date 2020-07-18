@@ -3,6 +3,7 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.app.Activity;
@@ -18,27 +19,32 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class addfriend extends AppCompatActivity {
 
-    private ImageButton imageButton, imageButton2;
-    private RelativeLayout layout;
+    private ImageButton imageButton2;
+    private LinearLayout layout;
     private EditText editText;
     private Button button5;
     private IntentIntegrator scanIntegrator;
+    private CircleImageView imageButton;
     private View background;
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.do_not_move, R.anim.do_not_move);
         setContentView(R.layout.activity_addfriend);
-        imageButton = (ImageButton) findViewById(R.id.imageButton);
+        imageButton = (CircleImageView) findViewById(R.id.imageButton);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +95,7 @@ public class addfriend extends AppCompatActivity {
                 integrator.initiateScan();
             }
         });*/
-        layout = findViewById(R.id.Relativelayout);
+        layout = findViewById(R.id.addfriend);
         editText = findViewById(R.id.editText6);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,11 +139,11 @@ public class addfriend extends AppCompatActivity {
     }
 
     private void circularRevealActivity() {
-        int cx = background.getLeft() - getDips(64);
-        int cy = background.getTop() - getDips(64);
+        int cx = background.getLeft() + getDips(64);
+        int cy = background.getTop() + getDips(64);
         float finalRadius = Math.max(background.getWidth(), background.getHeight());
         Animator circularReveal = ViewAnimationUtils.createCircularReveal(background, cx, cy, 0, finalRadius);
-        circularReveal.setDuration(1500);
+        circularReveal.setDuration(1200);
         background.setVisibility(View.VISIBLE);
         circularReveal.start();
     }
@@ -169,7 +175,7 @@ public class addfriend extends AppCompatActivity {
                 public void onAnimationRepeat(Animator animator) {
                 }
             });
-            circularReveal.setDuration(1500);
+            circularReveal.setDuration(1200);
             circularReveal.start();
         }
         else { super.onBackPressed(); }

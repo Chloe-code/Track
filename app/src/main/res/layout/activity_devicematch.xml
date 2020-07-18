@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".devicematch">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/signup"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:background="@drawable/map"/>
+        <TextView
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:id="@+id/profile_email"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="-15dp"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center"
+            tools:text="第一次使用  TrackDear  請先完成設定"
+            android:textColor="#FFFAF0"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="-10dp"
+        android:orientation="vertical"
+        android:background="@drawable/signup2">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="連 接 裝 置"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:layout_marginTop="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="掃描裝置上的 QR Code"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:layout_marginTop="20dp"/>
+        <RelativeLayout
+            android:id="@+id/relative_scan_take_single"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_centerInParent="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IM-235-TD001"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:layout_marginTop="20dp"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            app:civ_circle_background_color="#1EAA8E"
+            android:src="@drawable/ic_chevron_right_black_24dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="30dp"
+            android:text="Skip"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:textColor="#707070"/>
+        <!--app:civ_border_color="#1EAA8E"
+        app:civ_border_width="5dp"-->
+
+    </LinearLayout>
+
+</LinearLayout>

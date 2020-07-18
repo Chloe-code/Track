@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -38,6 +39,11 @@ public class homeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     {
         this.data = data;
     }
+    interface OnItemClickListener{
+        void OnItemClick(int position);
+    }
+    OnItemClickListener onItemClickListener;
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -58,8 +64,9 @@ public class homeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final Item item = data.get(position);
+        final ListHeaderViewHolder itemController = (ListHeaderViewHolder) holder;
         //holder.name.setText(data.get(position));
         //byteArray = Base64.decode(image.get(position), Base64.DEFAULT);
         //Bitmap decodedImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
@@ -70,10 +77,9 @@ public class homeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         //}
         switch (item.type) {
             case HEADER:
-                final ListHeaderViewHolder itemController = (ListHeaderViewHolder) holder;
                 itemController.refferalItem = item;
                 itemController.name.setText(item.text);
-                if(item.type==0)
+                if(position==0)
                 {
                     itemController.framelayout.setBackgroundResource(R.drawable.white_circleborder2);
                 }
@@ -111,10 +117,18 @@ public class homeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 byteArray = Base64.decode(item.text2,Base64.DEFAULT);
                 Bitmap decodedImage2 = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
                 itemController2.circleimageview.setImageBitmap(decodedImage2);
-                if(item.type==0)
+                if(position==1)
                 {
                     itemController2.framelayout.setBackgroundResource(R.drawable.white_circleborder2);
                 }
+                itemController2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(onItemClickListener!=null){
+                            onItemClickListener.OnItemClick(position);
+                        }
+                    }
+                });
                 break;
         }
     }
@@ -127,6 +141,10 @@ public class homeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemCount() {
         return data.size();
     }
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
 
     public class ListHeaderViewHolder extends RecyclerView.ViewHolder
     {
@@ -140,6 +158,9 @@ public class homeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             name = (TextView) itemView.findViewById(R.id.username);
             circleimageview = (CircleImageView) itemView.findViewById(R.id.userpicture);
             framelayout = (FrameLayout) itemView.findViewById(R.id.homepic);
+        }
+
+        public void setOnClickListener(View.OnClickListener onClickListener) {
         }
     }
     /*public class ViewHolder extends RecyclerView.ViewHolder {
