@@ -22,6 +22,7 @@ public class beaconopen extends AppCompatActivity {
     private beaconRecyclerAdapter beaconrecyclerAdapter;
     private Handler handler = new Handler();
     private ImageView imageback;
+    int pp=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
