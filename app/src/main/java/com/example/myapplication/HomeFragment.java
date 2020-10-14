@@ -1,20 +1,33 @@
 package com.example.myapplication;
 
+import android.animation.Animator;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,29 +42,48 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import static androidx.core.content.ContextCompat.getSystemService;
 
 public class HomeFragment extends Fragment
 {
     private View view;
-    private Button button, button4, button5, buttont;
-    private CircleImageView addfriendbutton;
+    private Button button2, button5;
+    private ImageButton imageButton2;
+    private EditText editText;
     SupportMapFragment supportMapFragment;
     private RecyclerView recyclerView;
     private homeRecyclerAdapter homerecyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
     //ArrayList<String> title,photo;
     List<homeRecyclerAdapter.Item> title;
-    Handler handler;
+    private Handler handler = new Handler();
     private String line0=null, line00=null, devicelist=null;
     private String line1=null, line10=null;
     private String line2=null;
+    private FloatingActionButton fab;
+    private LinearLayout addfriendlayout,layoutContent;
+    private RelativeLayout layoutMain;
+    private boolean isOpen = false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_home,container, false);
         //homere();
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (getActivity().getCurrentFocus() != null && getActivity().getCurrentFocus().getWindowToken() != null) {
+                        manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
+                }
+                return false;
+            }
+        });
+        fab = (FloatingActionButton) view.findViewById(R.id.button);
+        handler.post(task);
         return view;
     }
 
@@ -93,13 +125,44 @@ public class HomeFragment extends Fragment
             }
         });*/
 
-        addfriendbutton = (CircleImageView) getView().findViewById(R.id.button);
-        addfriendbutton.setOnClickListener(new View.OnClickListener() {
+        layoutMain = (RelativeLayout) getView().findViewById(R.id.layoutMain);
+        addfriendlayout = (LinearLayout) getView().findViewById(R.id.addfriendlayout);
+        layoutContent = (LinearLayout) getView().findViewById(R.id.friendlistlayout);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), addfriend.class));
+            public void onClick(View view) {
+                viewaddfriend();
             }
         });
+        button5 = (Button) getView().findViewById(R.id.button5);
+        button2 = (Button) getView().findViewById(R.id.button2);
+        imageButton2 = (ImageButton) getView().findViewById(R.id.imageButton2);
+        editText = (EditText) getView().findViewById(R.id.editText6);
+        button5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goqrcode = new Intent(getActivity(),qrcode.class);
+                startActivity(goqrcode);
+            }
+        });
+        imageButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goqrcode = new Intent(getActivity(),qrcode.class);
+                startActivity(goqrcode);
+            }
+        });
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent gosearch = new Intent(getActivity(),addfriend3.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("username",editText.getText().toString());
+                gosearch.putExtras(bundle);
+                startActivity(gosearch);
+            }
+        });
+
     }
     /*@Override
     public void onMapReady(GoogleMap googleMap) {
@@ -133,9 +196,8 @@ public class HomeFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        initData();
-        RecyclerView();
-        handler = new Handler();
+        //initData();
+        //RecyclerView();
     }
 
     private void initData()
@@ -151,12 +213,11 @@ public class HomeFragment extends Fragment
                     title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.HEADER, split_line0[0].replaceAll("\\s",""),split_line0[6]));
                     title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.CHILD, split_line00[0].replaceAll("\\s",""),split_line00[7]));
                 }
-                line1 = ws_test2.homerecyclrview("Apple");
-                if (line1.equals("error") == false) {
-                    String[] split_line = line1.split("%");
-                    for (int i = 0; i < split_line.length; i++) {
-                        line2 = ws_test2.personinfoselect(split_line[i]);
-                        devicelist = ws_test2.homerecyclrview2(split_line[i]);
+                String[] line1 = ws_test2.homerecyclrview("Apple@gmail.com");
+                if (line1!= null) {
+                    for (int i = 0; i < line1.length; i++) {
+                        line2 = ws_test2.personinfoselect(line1[i]);
+                        devicelist = ws_test2.homerecyclrview2(line1[i]);
                         line10 = ws_test2.deviceinfoselect(devicelist);
                         if (line2.equals("error") == false) {
                             String[] split_line2 = line2.split("%");
@@ -219,5 +280,67 @@ public class HomeFragment extends Fragment
             }
         });*/
     }
+    private Runnable task =new Runnable() {
+        public void run() {
+            //handler.postDelayed(this,5*1000);
+            initData();
+            RecyclerView();
+        }
+    };
+    private void viewaddfriend() {
 
+        if (!isOpen) {
+
+            int x = layoutContent.getRight();
+            int y = layoutContent.getBottom();
+
+            int startRadius = 0;
+            int endRadius = (int) Math.hypot(layoutMain.getWidth(), layoutMain.getHeight());
+
+            fab.setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), android.R.color.white, null)));
+            fab.setImageResource(R.drawable.ic_close);
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(addfriendlayout, x, y, startRadius, endRadius);
+
+            addfriendlayout.setVisibility(View.VISIBLE);
+            anim.start();
+
+            isOpen = true;
+
+        } else {
+
+            int x = addfriendlayout.getRight();
+            int y = addfriendlayout.getBottom();
+
+            int startRadius = Math.max(layoutContent.getWidth(), layoutContent.getHeight());
+            int endRadius = 0;
+
+            fab.setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), android.R.color.white, null)));
+            fab.setImageResource(R.drawable.ic_add2);
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(addfriendlayout, x, y, startRadius, endRadius);
+            anim.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    addfriendlayout.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator)
+                { }
+
+                @Override
+                public void onAnimationRepeat(Animator animator)
+                { }
+            });
+            anim.start();
+
+            isOpen = false;
+        }
+    }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GPS/網路定位</string>
+    <string name="app_name">TrackDear</string>
     <string name="drawer_open">Drawer opened</string>
     <string name="drawer_close">Drawer closed</string>
     <string name="title_activity_page2">page2</string>

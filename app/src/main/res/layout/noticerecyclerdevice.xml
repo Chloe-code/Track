@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:padding="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="20dp">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:layout_gravity="center"
+        android:background="@drawable/white_circleborder2">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/devicepic"
+            android:src="@drawable/dodo3"/>
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/requestusername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="left"
+            android:textColor="@android:color/black"
+            android:textSize="17dp"
+            android:text="AppleKid"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="left"
+            android:textColor="@android:color/black"
+            android:textSize="15dp"
+            android:text="距離超過安全範圍"/>
+    </LinearLayout>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="查看"
+        android:id="@+id/requestcheck"
+        android:textColor="#FFFFFF"
+        android:layout_marginLeft="50dp"
+        android:background="@drawable/addfriendbutton"
+        android:layout_gravity="center"
+        android:textSize="15sp" />
+</LinearLayout>

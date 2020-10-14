@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:padding="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="20dp">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:layout_gravity="center"
+        android:background="@drawable/white_circleborder">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/friendpic"
+            android:src="@drawable/dodo3"/>
+    </FrameLayout>
+    <TextView
+        android:id="@+id/searchusername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        android:text="Apple"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="+ 加好友"
+        android:id="@+id/addfriendcheck2"
+        android:textColor="#FFFFFF"
+        android:layout_marginLeft="120dp"
+        android:background="@drawable/addfriendbutton"
+        android:layout_gravity="center"
+        android:textSize="17sp" />
+</LinearLayout>

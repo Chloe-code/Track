@@ -8,59 +8,74 @@
     tools:context=".device2">
 
     <include layout="@layout/toolbar"/>
-    <TextView
-        android:id="@+id/textView4"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/toolbar"
-        android:gravity="center"
-        android:text="裝置資料設定"
-        android:textSize="28sp"
-        android:textColor="#FFFFFF"
-        android:background="#1EAA8E"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="62dp"
-        android:layout_marginLeft="20dp"
-        app:srcCompat="@drawable/ic_back" />
-
-
+        android:layout_below="@id/toolbar"
+        android:id="@+id/d3"
+        android:background="#1EAA8E">
+        <ImageView
+            android:id="@+id/devicesetback"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            app:srcCompat="@drawable/ic_back" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="裝置資料設定"
+            android:textSize="26sp"
+            android:textColor="#FFFFFF"/>
+        <Button
+            android:id="@+id/deditbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
+            android:shadowColor="#00FFFFFF"
+            android:layout_gravity="right"
+            android:textColor="#FFFFFF"
+            android:visibility="invisible"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="編輯" />
+    </FrameLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="ExtraText"
-        android:layout_below="@+id/textView4"
+        android:layout_below="@+id/d3"
         android:layout_above="@+id/buttonsave2">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/person2">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_marginTop="40dp"
-                android:src="@drawable/dodo3"
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                app:civ_border_color="#000000"
-                app:civ_border_width="0.5dp" />
-
-            <ImageView
-                android:id="@+id/imageView6"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignRight="@+id/profile_image"
-                android:layout_marginTop="82dp"
-                android:background="@drawable/camerabg"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/ic_camera" />
+                android:layout_margin="35dp"
+                android:background="@drawable/white_circleborder2"
+                android:padding="4dp">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/device_image"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/dodo3"
+                    app:civ_border_color="#000000"
+                    app:civ_border_width="0.5dp" />
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="right|bottom"
+                    android:background="@drawable/camerabg"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/ic_camera" />
+            </FrameLayout>
 
             <ImageView
                 android:id="@+id/imageView"

@@ -9,6 +9,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-feature
@@ -21,14 +22,18 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/map"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@drawable/bg_round_button"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".devicematch"></activity>
+        <activity android:name=".beaconopen"></activity>
+        <activity
+            android:name=".addfriend3"
+            android:windowSoftInputMode="stateHidden|adjustPan"></activity>
+        <activity android:name=".devicematch" />
         <activity android:name=".finishsetup" />
         <activity android:name=".devicesetup" />
         <activity android:name=".Signup" />
@@ -55,16 +60,10 @@
         <activity android:name=".personaledit" />
         <activity android:name=".addfriend2" />
         <activity
-            android:name=".addfriend"
-            android:theme="@style/AppTheme.CustomTheme">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -86,6 +85,15 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider" />
         </provider>
+        <service
+            android:name = ".notification_device"
+            android:label = "@string/app_name" >
+            <intent-filter>
+                <action
+                    android:name = "com.example.myapplication.notification_device" />
+                <category android:name= "android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

@@ -8,61 +8,65 @@
 
     <include layout="@layout/toolbar"/>
 
-    <TextView
-        android:id="@+id/textView4"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/toolbar"
-        android:gravity="center"
-        android:text="裝置資料設定"
-        android:textSize="28sp"
-        android:textColor="#FFFFFF"
-        android:background="#1EAA8E"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="62dp"
-        android:layout_marginLeft="20dp"
-        app:srcCompat="@drawable/ic_back" />
+        android:layout_below="@id/toolbar"
+        android:id="@+id/d1"
+        android:background="#1EAA8E">
+        <ImageView
+            android:id="@+id/devicesetback"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            app:srcCompat="@drawable/ic_back" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="裝置資料設定"
+            android:textSize="26sp"
+            android:textColor="#FFFFFF"/>
+        <Button
+            android:id="@+id/deditbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
+            android:shadowColor="#00FFFFFF"
+            android:layout_gravity="right"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="編輯" />
+    </FrameLayout>
 
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="70dp"
-        android:layout_height="34dp"
-        android:background="#00FFFFFF"
-        android:shadowColor="#00FFFFFF"
-        android:layout_marginTop="58dp"
-        android:gravity="center"
-        android:layout_alignParentRight="true"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:text="編輯" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="ExtraText"
-        android:layout_below="@+id/textView4">
-
-
+        android:layout_above="@+id/d2"
+        android:layout_below="@+id/d1">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/person2">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_marginTop="40dp"
-                android:src="@drawable/dodo3"
+            android:id="@+id/device2">
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                app:civ_border_color="#000000"
-                app:civ_border_width="0.5dp" />
+                android:layout_margin="35dp"
+                android:background="@drawable/white_circleborder2"
+                android:padding="4dp">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/device_image"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/dodo3"
+                    app:civ_border_color="#000000"
+                    app:civ_border_width="0.5dp" />
+            </FrameLayout>
 
             <ImageView
                 android:id="@+id/imageView"
@@ -121,6 +125,7 @@
                 android:layout_marginTop="300dp"
                 android:adjustViewBounds="true"
                 app:srcCompat="@drawable/ic_distance" />
+
             <View
                 android:layout_width="290dp"
                 android:layout_height="0.5dip"
@@ -151,8 +156,8 @@
                 android:layout_marginLeft="95dp"
                 android:layout_marginTop="158dp"
                 android:background="@null"
-                android:textColor="#000000"
                 android:text="Apple"
+                android:textColor="#000000"
                 android:textSize="20sp" />
 
             <TextView
@@ -162,8 +167,8 @@
                 android:layout_marginLeft="95dp"
                 android:layout_marginTop="308dp"
                 android:background="@null"
-                android:textColor="#000000"
                 android:text="150 m"
+                android:textColor="#000000"
                 android:textSize="20sp" />
 
             <TextView
@@ -173,8 +178,8 @@
                 android:layout_marginLeft="95dp"
                 android:layout_marginTop="252dp"
                 android:background="@null"
-                android:textColor="#000000"
                 android:text="1989/10/10"
+                android:textColor="#000000"
                 android:textSize="20sp" />
 
             <TextView
@@ -184,8 +189,8 @@
                 android:layout_marginLeft="95dp"
                 android:layout_marginTop="358dp"
                 android:background="@null"
-                android:textColor="#000000"
                 android:text="請輸入自我介紹"
+                android:textColor="#000000"
                 android:textSize="20sp" />
 
             <ImageView
@@ -196,19 +201,18 @@
                 android:layout_marginTop="208dp"
                 android:adjustViewBounds="true"
                 app:srcCompat="@drawable/ic_male" />
-
         </RelativeLayout>
-
     </ScrollView>
 
     <Button
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:text="移 除 裝 置"
-        android:textSize="20sp"
-        android:textColor="#FF0000"
-        android:background="@drawable/sqrbutton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp"
-        android:layout_alignParentBottom="true"/>
-        </RelativeLayout>
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:id="@+id/d2"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/sqrbutton"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="15dp"
+    android:text="移 除 裝 置"
+    android:textColor="#FF0000"
+    android:textSize="20sp" />
+</RelativeLayout>

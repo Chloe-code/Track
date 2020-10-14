@@ -1,10 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".addfriend2">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/addfriendcheck1"
+    android:layout_width="225dp"
+    android:layout_height="240dp"
+    android:layout_gravity="center"
+    android:background="#00FFFFFF"
+    android:gravity="center">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:background="@android:color/white"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:id="@+id/homepic"
+            android:layout_marginTop="25dp"
+            android:layout_gravity="center"
+            android:background="@drawable/white_circleborder">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/userpictureadd"
+                android:src="@drawable/dodo3"/>
+        </FrameLayout>
+        <TextView
+            android:id="@+id/tvname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:padding="2dp"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            android:text="Alex"
+            android:textStyle="bold"
+            android:textSize="22sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tvemail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="17dp"
+            android:text="Alex@gmail.com"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llBtnGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/addfriendqr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/logoutdialog"
+            android:clickable="true"
+            android:onClick="logout"
+            android:text="加好友"
+            android:textSize="17sp"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:textColor="#676767" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="1px"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:background="#929292" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/canceladdfriendqr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/logoutdialog"
+            android:clickable="true"
+            android:onClick="cancle"
+            android:text="取消"
+            android:textSize="17sp"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:textColor="#676767" />
+
+    </LinearLayout>
+
+</LinearLayout>

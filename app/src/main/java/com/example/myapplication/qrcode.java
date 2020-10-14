@@ -1,7 +1,10 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,17 +14,23 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.zxing.Result;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class qrcode extends AppCompatActivity implements ZXingScannerView.ResultHandler {
@@ -29,11 +38,13 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
     private ZXingScannerView mScannerView;
     private ImageView imageView9;
     private Button qr, qrgenerate;
+    private CircleImageView userpicture;
     byte[] byteArray;
     ImageView qrimg;
-    private String line=null;
+    private String line=null, line2=null;
     Handler handler;
     private GoogleSignInAccount googleSignInAccount;
+    TextView email,name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +57,7 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
         imageView9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent goback = new Intent(qrcode.this,addfriend.class);
-                startActivity(goback);
+                finish();
             }
         });
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.relative_scan_take_single);
@@ -90,12 +100,15 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
         mScannerView.stopCamera();
     }
     @Override
-    public void handleResult(Result rawResult) {
+    public void handleResult(final Result rawResult) {
         Log.w("handleResult", rawResult.getText());
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(rawResult.getText());
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        Thread thread = new Thread() {
+            public void run() {
+                line2 = ws_test2.personinfoselect(rawResult.getText());//googleSignInAccount.getEmail()
+                handler.post(runnableUi2);
+            }
+        };
+        thread.start();
     }
     private void generate ()
     {
@@ -122,4 +135,47 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
             }
         }
     };
+    Runnable runnableUi2 = new Runnable()
+    {
+        @Override
+        public void run() {
+            if (line2.equals("error")==false) {
+                String[] split_line = line2.split("%");
+                String addname = (split_line[0].replaceAll("\\s",""));
+                String addemail = (split_line[1].replaceAll("\\s",""));
+                byteArray = Base64.decode(split_line[6], Base64.DEFAULT);
+                Bitmap decodedImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                showDialog(addname,addemail,decodedImage);
+            }
+        }
+    };
+    private void showDialog(String resultname, String resultemail, Bitmap resultpicture){
+        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(qrcode.this);
+        View view = LayoutInflater.from(qrcode.this).inflate(R.layout.activity_addfriend2,(LinearLayout) findViewById(R.id.addfriendcheck1));
+        normalDialog.setView(view);
+        normalDialog.setCancelable(false);
+        email=view.findViewById(R.id.tvemail);
+        name=view.findViewById(R.id.tvname);
+        userpicture=view.findViewById(R.id.userpictureadd);
+        name.setText(resultname);
+        email.setText(resultemail);
+        userpicture.setImageBitmap(resultpicture);
+        TextView cancel = (TextView)view.findViewById(R.id.canceladdfriendqr);
+        TextView add = (TextView)view.findViewById(R.id.addfriendqr);
+        final AlertDialog alertDialog = normalDialog.create();
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+                mScannerView.startCamera();
+            }
+        });
+        alertDialog.show();
+    }
 }

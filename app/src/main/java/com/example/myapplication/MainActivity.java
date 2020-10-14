@@ -11,12 +11,15 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -61,11 +64,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import android.os.Handler;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.LogRecord;
 
 import static java.lang.Double.parseDouble;
@@ -90,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
     mapinfowindow adapter;
     Handler handler; Geocoder geocoder;
     private GoogleSignInClient googleSignInClient;
+    public LatLng latLng,latLng3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
         mhistoryfragment=new HistoryFragment();
         mnoticefragment=new NoticeFragment();
         setDefaultFragment();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("beacon_open"));
     }
     private void getCurrentLocation() {
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
@@ -157,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                     supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                         @Override
                         public void onMapReady(final GoogleMap googleMap) {
-                            final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            latLng = new LatLng(location.getLatitude(), location.getLongitude());
                             markerOptions = new MarkerOptions().position(latLng).title("I Am Here.").icon(bitmapDescriptorFromVector(MainActivity.this,R.drawable.ic_user));
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                             googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
@@ -275,16 +283,19 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent();
                     intent.setClass(MainActivity.this, personaledit.class);
                     startActivity(intent);
-                    Toast.makeText(getApplicationContext(), "person", Toast.LENGTH_LONG).show();
                     break;
                 case R.id.device:
                     Intent intent2 = new Intent();
-                    intent2.setClass(MainActivity.this, device.class);
+                    intent2.setClass(MainActivity.this, devicelist.class);
                     startActivity(intent2);
-                    Toast.makeText(getApplicationContext(), "device", Toast.LENGTH_LONG).show();
                     break;
                 case R.id.add:
                     Toast.makeText(getApplicationContext(), "add", Toast.LENGTH_LONG).show();
+                    break;
+                case R.id.beacon:
+                    Intent intent4 = new Intent();
+                    intent4.setClass(MainActivity.this, beaconopen.class);
+                    startActivity(intent4);
                     break;
                 case R.id.logout:
                     showDialog();
@@ -353,33 +364,37 @@ public class MainActivity extends AppCompatActivity {
     public void onStart()
     {
         super.onStart();
-        //WebService呼叫必須用Thread包著
-        Thread thread = new Thread(){
+        Timer timer = new Timer(true);
+        TimerTask timerTask = new TimerTask() {
+            @Override
             public void run() {
-                String line = ws_test2.select_devicelocation("IM-235-TD001");
-                if (line.equals("error")==false) {
-                    String[] split_line = line.split("%");
-                    LatLng latLng2 = new LatLng(parseDouble(split_line[4]), parseDouble(split_line[5]));
-                    markerOptions2 = new MarkerOptions().position(latLng2).title("IM-235-TD001");//.snippet(subTitle)
-                }
-                infowindow = new ArrayList<>();
-                String line1 = ws_test2.homerecyclrview("Apple");
-                if (line1.equals("error") == false) {
-                    String[] split_line = line1.split("%");
-                    for (int i = 0; i < split_line.length; i++) {
-                        String devicelist = ws_test2.homerecyclrview2(split_line[i]);
-                        String line10 = ws_test2.select_devicelocation(devicelist);
-                        if (line10.equals("error") == false) {
-                            split_line10 = line10.split("%");
-                            LatLng latlngfrienddevice=new LatLng(Double.parseDouble(split_line10[4]), Double.parseDouble(split_line10[5]));
-                            friendmarker.add(latlngfrienddevice);
+                Thread thread = new Thread(){
+                    public void run() {
+                        String line = ws_test2.select_devicelocation("IM-235-TD001");
+                        if (line.equals("error")==false) {
+                            String[] split_line = line.split("%");
+                            LatLng latLng2 = new LatLng(parseDouble(split_line[4]), parseDouble(split_line[5]));
+                            markerOptions2 = new MarkerOptions().position(latLng2).title("IM-235-TD001");//.snippet(subTitle)
                         }
-
+                        infowindow = new ArrayList<>();
+                        String[] line1 = ws_test2.homerecyclrview("Apple@gmail.com");
+                        if (line1!=null) {
+                            for (int i = 0; i < line1.length; i++) {
+                                String devicelist = ws_test2.homerecyclrview2(line1[i]);
+                                String line10 = ws_test2.select_devicelocation(devicelist);
+                                if (line10.equals("error") == false) {
+                                    split_line10 = line10.split("%");
+                                    LatLng latlngfrienddevice=new LatLng(Double.parseDouble(split_line10[4]), Double.parseDouble(split_line10[5]));
+                                    friendmarker.add(latlngfrienddevice);
+                                }
+                            }
+                        }
                     }
-                }
+                };
+                thread.start();
             }
         };
-        thread.start();
+        timer.schedule(timerTask, 0,3000);
     }
     public void onmarker(final String m, final GoogleMap googleMap, final Marker marker)
     {
@@ -391,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(msg.what == 1) {
                     if(infowindow.isEmpty())
-                    { Toast.makeText(getApplication(),"沒有成功", Toast.LENGTH_SHORT);}
+                    { /*Toast.makeText(getApplication(),"沒有成功", Toast.LENGTH_SHORT);*/}
                     else
                     {
                         String address="NDHU1";
@@ -451,4 +466,77 @@ public class MainActivity extends AppCompatActivity {
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }//之後再考慮使用者本身要用什麼圖案標記在地圖上
+
+    public double CalculationByDistance(LatLng StartP, LatLng EndP) {
+        int Radius = 6371;
+        double lat1 = StartP.latitude;
+        double lat2 = EndP.latitude;
+        double lon1 = StartP.longitude;
+        double lon2 = EndP.longitude;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        double meter = valueResult % 1000;
+        int meterInDec = Integer.valueOf(newFormat.format(meter));
+        Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
+                + " Meter   " + meterInDec);
+        Log.v("distance",String.valueOf(Radius*c*1000));
+        return Radius * c*1000;
+    }
+    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String deviceuuid = intent.getStringExtra("device_beacon_open");
+            final String devicedistance = intent.getStringExtra("device_distance");
+            final Handler Handler = new Handler();
+            Timer Timer = new Timer();
+            TimerTask TimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    new Thread() {
+                        public void run() {
+                            String line = ws_test2.select_devicelocation(deviceuuid);
+                            if (line.equals("error") == false) {
+                                String[] split_line = line.split("%");
+                                latLng3 = new LatLng(parseDouble(split_line[4]), parseDouble(split_line[5]));
+                            }
+                        }
+                    }.start();
+                    Handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            new  Thread(){
+                                @Override
+                                public void run() {
+                                    int line = ws_test2.beaconcheck(deviceuuid);
+                                    if (line==1) {
+                                        Double distance_now = CalculationByDistance(latLng, latLng3);
+                                        if (Integer.valueOf(distance_now.intValue()) > Integer.parseInt(devicedistance))
+                                        {
+                                            startService( new Intent( MainActivity.this, notification_device.class )) ;
+                                        }
+                                    }
+                                }
+                            }.start();
+                        }
+                    },500);
+                }
+            };
+            Timer.schedule(TimerTask, 5000, 50000);
+            Toast.makeText(MainActivity.this, deviceuuid + " " + devicedistance, Toast.LENGTH_SHORT).show();
+        }
+    };
+    /*@Override
+    protected void onStop () {
+        super .onStop() ;
+        //startService( new Intent( this, notification_device.class )) ;
+    }*/
 }

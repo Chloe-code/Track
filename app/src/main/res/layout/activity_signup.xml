@@ -48,6 +48,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
                 android:orientation="vertical"
+                android:id="@+id/insertuser"
                 android:background="@drawable/signup2">
                 <TextView
                 android:layout_width="wrap_content"
@@ -78,6 +79,7 @@
                     android:background="@drawable/ic_user"/>
                 <EditText
                     android:layout_width="270dp"
+                    android:id="@+id/insertusername"
                     android:textSize="18sp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -85,18 +87,18 @@
                     android:background="@null"
                     android:hint="用戶名稱"/>
             </LinearLayout>
-                <View
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:background="#686868"/>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_gravity="center">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center">
                 <ImageView
                     android:layout_width="28dp"
                     android:layout_height="28dp"
@@ -105,37 +107,82 @@
                 <EditText
                     android:layout_width="270dp"
                     android:textSize="18sp"
+                    android:id="@+id/insertuserphone"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:background="@null"
                     android:hint="聯絡電話"/>
             </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="#686868"/>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_gravity="center">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="#686868"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center">
                 <ImageView
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/ic_gender"/>
-                <EditText
+                <LinearLayout
                     android:layout_width="270dp"
-                    android:textSize="18sp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@null"
-                    android:hint="性別"/>
+                    android:layout_height="wrap_content">
+                    <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp">
+                            <ImageView
+                                android:id="@+id/userviewmale"
+                                android:layout_width="35dp"
+                                android:layout_height="42dp"
+                                android:adjustViewBounds="true"
+                                android:background="#00000000"
+                                android:scaleType="fitCenter"
+                                app:srcCompat="@drawable/sqrbutton2"
+                                android:visibility="invisible"/>
+                            <ImageButton
+                                android:id="@+id/usermale"
+                                android:layout_width="27dp"
+                                android:layout_height="27dp"
+                                android:adjustViewBounds="true"
+                                android:layout_gravity="center"
+                                android:background="#00000000"
+                                android:scaleType="fitCenter"
+                                app:srcCompat="@drawable/ic_male"
+                                android:onClick="usermale"/>
+                        </FrameLayout>
+                    <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp">
+                            <ImageView
+                                android:id="@+id/userviewfemale"
+                                android:layout_width="35dp"
+                                android:layout_height="42dp"
+                                android:adjustViewBounds="true"
+                                android:background="#00000000"
+                                android:scaleType="fitCenter"
+                                app:srcCompat="@drawable/sqrbutton2"
+                                android:visibility="invisible"/>
+                            <ImageButton
+                                android:id="@+id/userfemale"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:adjustViewBounds="true"
+                                android:layout_gravity="center"
+                                android:background="#00000000"
+                                android:scaleType="fitCenter"
+                                app:srcCompat="@drawable/ic_female"
+                                android:onClick="userfemale"/>
+                        </FrameLayout>
+                </LinearLayout>
             </LinearLayout>
                 <View
                     android:layout_width="match_parent"
@@ -157,6 +204,7 @@
                 <TextView
                     android:layout_width="270dp"
                     android:textSize="18sp"
+                    android:id="@+id/insertuserbirth"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
@@ -183,6 +231,7 @@
                 <EditText
                     android:layout_width="270dp"
                     android:textSize="18sp"
+                    android:id="@+id/insertusernote"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
@@ -196,8 +245,6 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:background="#686868"/>
-            <!--app:civ_border_color="#1EAA8E"
-            app:civ_border_width="5dp"-->
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -249,8 +296,6 @@
                     android:textSize="16dp"
                     android:textColor="#707070"
                     />
-                <!--app:civ_border_color="#1EAA8E"
-                app:civ_border_width="5dp"android:onClick="skip"-->
 
             </LinearLayout>
             <LinearLayout
@@ -260,6 +305,7 @@
                 android:layout_marginRight="13dp"
                 android:layout_marginLeft="13dp"
                 android:orientation="vertical"
+                android:id="@+id/insertdevice"
                 android:background="@drawable/signup2">
                 <TextView
                     android:layout_width="wrap_content"
@@ -269,7 +315,7 @@
                     android:textSize="18sp"
                     android:layout_marginTop="20dp"/>
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_image"
+                    android:id="@+id/adddevicepicture"
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:layout_marginTop="15dp"
@@ -286,10 +332,11 @@
                         android:layout_width="28dp"
                         android:layout_height="28dp"
                         android:layout_marginTop="5dp"
-                        android:background="@drawable/ic_user"/>
+                        android:background="@drawable/ic_device"/>
                     <EditText
                         android:layout_width="270dp"
                         android:textSize="18sp"
+                        android:id="@+id/insertdevicename"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
@@ -316,6 +363,7 @@
                     <EditText
                         android:layout_width="270dp"
                         android:textSize="18sp"
+                        android:id="@+id/insertdevicedistance"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
@@ -339,14 +387,58 @@
                         android:layout_height="28dp"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/ic_gender"/>
-                    <EditText
+                    <LinearLayout
                         android:layout_width="270dp"
-                        android:textSize="18sp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@null"
-                        android:hint="性別"/>
+                        android:layout_height="wrap_content">
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp">
+                            <ImageView
+                                android:id="@+id/deviceviewmale"
+                                android:layout_width="35dp"
+                                android:layout_height="42dp"
+                                android:adjustViewBounds="true"
+                                android:background="#00000000"
+                                android:scaleType="fitCenter"
+                                app:srcCompat="@drawable/sqrbutton2"
+                                android:visibility="invisible"/>
+                            <ImageButton
+                                android:id="@+id/devicemale"
+                                android:layout_width="27dp"
+                                android:layout_height="27dp"
+                                android:adjustViewBounds="true"
+                                android:layout_gravity="center"
+                                android:background="#00000000"
+                                android:scaleType="fitCenter"
+                                app:srcCompat="@drawable/ic_male"
+                                android:onClick="devicemale"/>
+                        </FrameLayout>
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp">
+                            <ImageView
+                                android:id="@+id/deviceviewfemale"
+                                android:layout_width="35dp"
+                                android:layout_height="42dp"
+                                android:adjustViewBounds="true"
+                                android:background="#00000000"
+                                android:scaleType="fitCenter"
+                                app:srcCompat="@drawable/sqrbutton2"
+                                android:visibility="invisible"/>
+                            <ImageButton
+                                android:id="@+id/devicefemale"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:adjustViewBounds="true"
+                                android:layout_gravity="center"
+                                android:background="#00000000"
+                                android:scaleType="fitCenter"
+                                app:srcCompat="@drawable/ic_female"
+                                android:onClick="devicefemale"/>
+                        </FrameLayout>
+                    </LinearLayout>
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
@@ -368,6 +460,7 @@
                     <TextView
                         android:layout_width="270dp"
                         android:textSize="18sp"
+                        android:id="@+id/insertdevicebirth"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
@@ -394,6 +487,7 @@
                     <EditText
                         android:layout_width="270dp"
                         android:textSize="18sp"
+                        android:id="@+id/insertdevicenote"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
@@ -407,12 +501,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:background="#686868"/>
-                <!--app:civ_border_color="#1EAA8E"
-                app:civ_border_width="5dp"-->
-
             </LinearLayout>
-
-
         </ViewFlipper>
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="52dp"
