@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 public class devicesetup extends AppCompatActivity {
 
+    int pp=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
