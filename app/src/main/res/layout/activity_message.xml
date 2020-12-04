@@ -1,47 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MessageActivity">
+    android:orientation="vertical">
 
+   <include layout="@layout/toolbar_message" />
 
-    <include layout="@layout/toolbar_message" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recyclerview_chat"
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/fri_bottom"/>
 
-    <TextView
-            android:id="@+id/tgl"
-            android:text="19 Dec 2019 "
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="80dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:id="@+id/fri_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp">
+        <ImageButton
+            android:id="@+id/photo"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:background="#00000000"
+            android:src="@drawable/ic_photo" />
 
+        <ImageButton
+            android:id="@+id/camera"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="-25dp"
+            android:background="#00000000"
+            android:src="@drawable/ic_camera" />
 
-    <TextView
+        <EditText
+            android:id="@+id/messagetext6"
+            android:layout_width="230dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/editname"
+            android:ems="10"
+            android:inputType="text" />
 
-        android:layout_width="190dp"
-        android:layout_height="47dp"
-        android:layout_below="@+id/tgl"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_toRightOf="@+id/picture_chat"
-        android:paddingLeft="25dp"
-        android:paddingTop="14dp"
-        android:text="HELLO NI HOW MA"
-        android:textColor="#000000" />
-
-    <ImageView
-        android:id="@+id/picture_chat"
-        android:layout_width="60dp"
-        android:layout_height="58dp"
-        android:layout_below="@+id/tgl"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/ic_people" />
-
-
-
-
-
+        <ImageButton
+            android:id="@+id/sent"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_toRightOf="@+id/editText6"
+            android:background="#00000000"
+            android:rotation="300"
+            android:layout_marginLeft="-10dp"
+            android:src="@drawable/ic_arrow" />
+    </LinearLayout>
 </RelativeLayout>
+

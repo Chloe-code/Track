@@ -39,7 +39,7 @@ public class homeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     {
         this.data = data;
     }
-    interface OnItemClickListener{
+    public interface OnItemClickListener{
         void OnItemClick(int position);
     }
     OnItemClickListener onItemClickListener;
@@ -193,4 +193,6 @@ public class homeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             this.text2 = text2;
         }
     }
+
+
 }

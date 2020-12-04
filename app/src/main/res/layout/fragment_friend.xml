@@ -8,16 +8,33 @@
     <include layout="@layout/toolbar_fri"></include>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fri_list"
+        android:id="@+id/users_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/users_appBar" />
-    <Button
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fri_toolbar" />
+
+    <!-- <TextView
+         android:id="@+id/textView3"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="TextView" />-->
+
+    <!--<Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView3"
+        android:text="Button"
+        android:onClick="test"/>-->
+
+
+    <!--<Button
         android:id="@+id/btn"
         android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/fri_list"
-        android:text="open message"/>
+        android:text="open message"/>-->
+
         <!--這裡open message的按鈕位置，我先幫你把它改成android:layout_below="@+id/toolbar"在toolbar之下-->
 </RelativeLayout>

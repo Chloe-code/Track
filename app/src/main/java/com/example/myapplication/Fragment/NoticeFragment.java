@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,6 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.example.myapplication.R;
+import com.example.myapplication.noticeRecyclerAdapter;
+import com.example.myapplication.ws_test2;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,7 +67,6 @@ public class NoticeFragment extends Fragment
     }
     private Runnable task =new Runnable() {
         public void run() {
-            //handler.postDelayed(this,5*1000);
             initData();
             try {
                 sleep(500);

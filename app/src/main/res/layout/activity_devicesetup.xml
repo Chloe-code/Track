@@ -51,7 +51,7 @@
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_marginTop="30dp"
-            android:src="@drawable/addpic"
+            android:src="@drawable/addfriendbutton"
             android:layout_gravity="center"
             app:civ_border_color="#000000"
             app:civ_border_width="0.5dp" />

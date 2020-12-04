@@ -94,6 +94,13 @@
                 <category android:name= "android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
+        <activity
+            android:name="com.example.myapplication.MessageActivity">
+            <intent-filter>
+                <action android:name="com.example.myapplication.MessageActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

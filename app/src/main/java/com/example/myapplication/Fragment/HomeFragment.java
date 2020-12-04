@@ -1,16 +1,11 @@
-package com.example.myapplication;
+package com.example.myapplication.Fragment;
 
 import android.animation.Animator;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,30 +14,27 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
+import com.example.myapplication.R;
+import com.example.myapplication.addfriend3;
+import com.example.myapplication.homeRecyclerAdapter;
+import com.example.myapplication.qrcode;
+import com.example.myapplication.ws_test2;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static androidx.core.content.ContextCompat.getSystemService;
+import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class HomeFragment extends Fragment
 {
@@ -148,14 +140,14 @@ public class HomeFragment extends Fragment
         imageButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent goqrcode = new Intent(getActivity(),qrcode.class);
+                Intent goqrcode = new Intent(getActivity(), qrcode.class);
                 startActivity(goqrcode);
             }
         });
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent gosearch = new Intent(getActivity(),addfriend3.class);
+                Intent gosearch = new Intent(getActivity(), addfriend3.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("username",editText.getText().toString());
                 gosearch.putExtras(bundle);

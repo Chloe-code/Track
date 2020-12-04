@@ -63,7 +63,7 @@
                 android:layout_height="55dp"
                 android:layout_marginTop="15dp"
                 android:layout_gravity="center"
-                android:src="@drawable/addpic"
+                android:src="@drawable/addfriendbutton"
                 app:civ_border_color="#000000"
                 app:civ_border_width="0.5dp" />
 
@@ -320,7 +320,7 @@
                     android:layout_height="55dp"
                     android:layout_marginTop="15dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/addpic"
+                    android:src="@drawable/addfriendbutton"
                     app:civ_border_color="#000000"
                     app:civ_border_width="0.5dp" />
                 <LinearLayout

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Fragment;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.example.myapplication.R;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
