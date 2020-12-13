@@ -4,6 +4,7 @@ public class Chat {
 
     private String sender;
     private String receiver;
+    private String message;
     private String time;
     private String profileImg;
     private String userName;
@@ -13,10 +14,10 @@ public class Chat {
 
     public Chat(String sender) {
         this.sender = sender;
-//        this.receiver = receiver;
+        this.receiver = receiver;
         this.time = time;
 //        this.userName = userName;
-//        this.profileImg = profileImg;
+        this.profileImg = profileImg;
 //        this.seen = isSeen();
     }
 
@@ -28,6 +29,14 @@ public class Chat {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getSender() {

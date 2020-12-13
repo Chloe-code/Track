@@ -2,6 +2,9 @@ package com.example.myapplication.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +30,9 @@ public class fri_RecyclerViewAdapter extends RecyclerView.Adapter<fri_RecyclerVi
 
     private ArrayList<Users> friendlist;
     private Context context;
+    String theLastMessage;
+    byte[] byteArray;
+
     //FragmentActivity activity
     public fri_RecyclerViewAdapter(Context context, ArrayList<Users> friendlist) {
         this.friendlist = friendlist;
@@ -45,12 +51,15 @@ public class fri_RecyclerViewAdapter extends RecyclerView.Adapter<fri_RecyclerVi
 
         holder.Name.setText(friendlist.get(position).getName());
         holder.Status.setText(friendlist.get(position).getStatus());
-        holder.Img.setImageResource(R.drawable.ic_people);
-        /*if(friendlist.get(position).getUserimg().equals("default")){
-                holder.Img.setImageResource(R.drawable.ic_people);
-        }else {
-            Glide.with(context).load(friendlist.get(position).getUserimg()).into(holder.Img);
-        }*/
+        byteArray = Base64.decode(friendlist.get(position).getUserimg(), Base64.DEFAULT);
+        Bitmap decodedImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        holder.Img.setImageBitmap(decodedImage);
+        //holder.Img.setImageResource(R.drawable.ic_people);
+//        if(friendlist.get(position).getUserimg().equals("default")){
+//                holder.Img.setImageResource(R.drawable.ic_people);
+//        }else {
+//            Glide.with(context).load(friendlist.get(position).getUserimg()).into(holder.Img);
+//        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +84,9 @@ public class fri_RecyclerViewAdapter extends RecyclerView.Adapter<fri_RecyclerVi
             Name = itemView.findViewById(R.id.txt_name);
             Status = itemView.findViewById(R.id.txt_message);
             Img = itemView.findViewById(R.id.img1); }
+    }
+    private void lastMessage (String username, TextView Last_msg){
+        theLastMessage = "default";
 
 
     }

@@ -20,7 +20,7 @@
         android:layout_alignParentBottom="true"
         android:padding="5dp">
         <ImageButton
-            android:id="@+id/photo"
+            android:id="@+id/gallery"
             android:layout_width="50dp"
             android:layout_height="60dp"
             android:background="#00000000"

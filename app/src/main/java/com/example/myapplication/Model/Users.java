@@ -13,7 +13,7 @@ public class Users{
     public Users(String name, String status ) {//String userimg
         this.name = name;
         this.status = status;
-        //this.userimg = userimg;
+        this.userimg = userimg;
 
     }
 

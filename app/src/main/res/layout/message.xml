@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/leftlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/friendimg"
+            android:elevation="3dp"
+            android:layout_margin="6dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_people"
+            android:scaleType="centerCrop"/>
+
+            <TextView
+                android:id="@+id/lefttext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:layout_gravity="center"
+                android:padding="5dp"
+                android:text="1"
+                android:background="@drawable/editname"
+                android:textColor="#000"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/lefttime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:text="time"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:textStyle="italic" />
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/rightlayout"
+        android:layout_width="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:layout_marginRight="15dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/righttime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="time"
+            android:textStyle="italic" />
+        <TextView
+            android:id="@+id/righttext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:text="2"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/editname"
+            android:layout_toRightOf="@+id/righttime"
+            android:textColor="#000"
+            android:textSize="16sp" />
+    </RelativeLayout>
+</RelativeLayout>
