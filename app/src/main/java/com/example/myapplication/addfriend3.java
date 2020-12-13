@@ -78,6 +78,7 @@ public class addfriend3 extends AppCompatActivity {
             @Override
             public void run() {
                 String[] dline = ws_test2.addfriendlist(username);
+                Log.v("test1","searchfriendname : "+dline.length);
                 if (dline!=null) {
                     for(int i=0;i<dline.length;i++) {
                         resultname.add(username);
@@ -95,12 +96,23 @@ public class addfriend3 extends AppCompatActivity {
         addfriendrecyclerAdapter = new addfriendRecyclerAdapter(getApplicationContext(),resultname,resultemail,resultpic);
         recyclerView.setAdapter(addfriendrecyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL);
-        recyclerView.addItemDecoration(dividerItemDecoration);
     }
     private Runnable task =new Runnable() {
         public void run() {
             RecyclerView();
         }
     };
+    public void deletefriend (View view)
+    {
+        new Thread() {
+            @Override
+            public void run() {
+                String deleteresult = ws_test2.deletefriend("Apple@gmail.com","chloechloe6332@gmail.com");
+                Log.v("test1","deletefriendname : "+deleteresult);
+                if (deleteresult!=null) {
+
+                }
+            }
+        }.start();
+    }
 }

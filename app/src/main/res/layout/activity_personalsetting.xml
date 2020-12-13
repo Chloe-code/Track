@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/person1"
+    android:orientation="vertical"
+    android:id="@+id/person3"
     tools:context=".personalsetting">
 
     <include layout="@layout/toolbar"/>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:id="@+id/p1"
         android:background="#1EAA8E">
         <ImageView
             android:id="@+id/imageView9"
@@ -44,9 +43,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/p1"
-        android:layout_above="@+id/buttonsave"
+        android:layout_height="wrap_content"
         android:fillViewport="true"
         tools:ignore="ExtraText">
 
@@ -55,7 +52,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:id="@+id/person2">
+            android:id="@+id/person4">
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -288,7 +285,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/savebtn"
-        android:layout_alignParentBottom="true"
         android:onClick="update" />
 
-</RelativeLayout>
+</LinearLayout>

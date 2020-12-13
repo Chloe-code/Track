@@ -1,11 +1,17 @@
-package com.example.myapplication.Fragment;
+package com.example.myapplication;
 
 import android.animation.Animator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,27 +20,33 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.example.myapplication.R;
-import com.example.myapplication.addfriend3;
-import com.example.myapplication.homeRecyclerAdapter;
-import com.example.myapplication.qrcode;
-import com.example.myapplication.ws_test2;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static androidx.core.content.ContextCompat.getSystemService;
+import static java.lang.Thread.sleep;
 
 public class HomeFragment extends Fragment
 {
@@ -42,25 +54,34 @@ public class HomeFragment extends Fragment
     private Button button2, button5;
     private ImageButton imageButton2;
     private EditText editText;
-    SupportMapFragment supportMapFragment;
     private RecyclerView recyclerView;
     private homeRecyclerAdapter homerecyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    //ArrayList<String> title,photo;
+    ArrayList<ArrayList<String>> friend= new ArrayList<>();
+    ArrayList<String> ffff = new ArrayList<>();
+    ArrayList<String> frienddata =new ArrayList<>();;
     List<homeRecyclerAdapter.Item> title;
     private Handler handler = new Handler();
-    private String line0=null, line00=null, devicelist=null;
-    private String line1=null, line10=null;
-    private String line2=null;
+    private Handler mThreadHandler;
+    private HandlerThread mThread;
+    private String line0=null, line00=null, devicelist=null, gmail=null;
+    private String line10=null, line2=null;
+    private String[] split_line22, line1;
     private FloatingActionButton fab;
     private LinearLayout addfriendlayout,layoutContent;
     private RelativeLayout layoutMain;
     private boolean isOpen = false;
+    GoogleSignInAccount alreadyloggedAccount;
+    GlobalVariable gl;
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mThread = new HandlerThread("");
+        mThread.start();
+        mThreadHandler = new Handler(mThread.getLooper());
 
         view = inflater.inflate(R.layout.fragment_home,container, false);
+        title = new ArrayList<>();
         //homere();
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -75,7 +96,16 @@ public class HomeFragment extends Fragment
             }
         });
         fab = (FloatingActionButton) view.findViewById(R.id.button);
-        handler.post(task);
+        mThreadHandler.post(task);
+
+        //Bundle bundle = this.getArguments();
+        //if (bundle != null)
+        //{
+            //Log.v("test1","bundle : "+gmail);
+            //gmail = bundle.getString("gmail");
+        //}
+        //else {gmail = "Apple@gmail.com"; }
+        //alreadyloggedAccount = GoogleSignIn.getLastSignedInAccount(this.getContext());
         return view;
     }
 
@@ -116,7 +146,6 @@ public class HomeFragment extends Fragment
                 startActivity(goaddfriend);
             }
         });*/
-
         layoutMain = (RelativeLayout) getView().findViewById(R.id.layoutMain);
         addfriendlayout = (LinearLayout) getView().findViewById(R.id.addfriendlayout);
         layoutContent = (LinearLayout) getView().findViewById(R.id.friendlistlayout);
@@ -147,7 +176,7 @@ public class HomeFragment extends Fragment
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent gosearch = new Intent(getActivity(), addfriend3.class);
+                Intent gosearch = new Intent(getActivity(),addfriend3.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("username",editText.getText().toString());
                 gosearch.putExtras(bundle);
@@ -188,25 +217,26 @@ public class HomeFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        //initData();
-        //RecyclerView();
     }
 
     private void initData()
     {
         new Thread() {
+            @Override
             public void run() {
                 line0 = ws_test2.personinfoselect("Apple@gmail.com");
                 devicelist = ws_test2.homerecyclrview2("Apple@gmail.com");
                 line00 = ws_test2.deviceinfoselect(devicelist);
+                Log.v("test1","11111111"+line0);
                 if (line0.equals("error")==false) {
                     String[] split_line0 = line0.split("%");
                     String[] split_line00 = line00.split("%");
                     title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.HEADER, split_line0[0].replaceAll("\\s",""),split_line0[6]));
                     title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.CHILD, split_line00[0].replaceAll("\\s",""),split_line00[7]));
                 }
-                String[] line1 = ws_test2.homerecyclrview("Apple@gmail.com");
-                if (line1!= null) {
+                line1 = ws_test2.homerecyclrview("Apple@gmail.com");
+
+                if (line1.length!= 0) {
                     for (int i = 0; i < line1.length; i++) {
                         line2 = ws_test2.personinfoselect(line1[i]);
                         devicelist = ws_test2.homerecyclrview2(line1[i]);
@@ -214,9 +244,10 @@ public class HomeFragment extends Fragment
                         if (line2.equals("error") == false) {
                             String[] split_line2 = line2.split("%");
                             title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.HEADER, split_line2[0].replaceAll("\\s",""),split_line2[6]));
-                            if(line10.equals("error")==false)
+                            Log.v("test1","22222222"+line1[0]);
+                            if(line10.equals("error") == false)
                             {
-                                String[] split_line22 = line10.split("%");
+                                split_line22 = line10.split("%");
                                 title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.CHILD, split_line22[0].replaceAll("\\s",""),split_line22[7]));
                             }
                         }
@@ -224,46 +255,23 @@ public class HomeFragment extends Fragment
                 }
             }
         }.start();
-        /*new Thread() {
-            public void run() {
-                line1 = ws_test2.homerecyclrview("Apple");
-                if (line1.equals("error") == false) {
-                    String[] split_line = line1.split("%");
-                    for (int i = 0; i < split_line.length; i++) {
-                        line2 = ws_test2.personinfoselect(split_line[i]);
-                        if (line2.equals("error") == false) {
-                            //String[] split_line2=null;
-                            String[] split_line2 = line2.split("%");
-                            title.add(split_line2[0].replaceAll("\\s+", ""));
-                            photo.add(split_line2[6]);
-                        }
-                    }
-                }
-            }
-        }.start();*/
     }
     private void RecyclerView()
     {
         //獲取RecyclerView
-        title = new ArrayList<>();
         //photo = new ArrayList<>();
         recyclerView=(RecyclerView)view.findViewById(R.id.recyclerView);
-        //創建adapter
         //homerecyclerAdapter = new homeRecyclerAdapter(getActivity(),title,photo);
-        //給RecyclerView設置adapter
         //recyclerView.setAdapter(homerecyclerAdapter);
-        //設置layoutManager,可以設置顯示效果，是線性布局、grid布局，還是瀑布流布局
-        //參數是：上下文、列表方向（横向還是縱向）、是否倒敘
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        homeRecyclerAdapter adapter = new homeRecyclerAdapter(title);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new homeRecyclerAdapter.OnItemClickListener() {
+        homerecyclerAdapter = new homeRecyclerAdapter(title);
+        recyclerView.setAdapter(homerecyclerAdapter);
+        /*adapter.setOnItemClickListener(new homeRecyclerAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
                 Toast.makeText(getActivity(), "here", Toast.LENGTH_SHORT).show();
             }
-        });
-        //RecyclerView中没有item的監聽事件，需要自己在適配器中寫一個監聽事件的接口。參數根據自定義
+        });*/
         /*homerecyclerAdapter.setOnItemClickListener(new homerecycleAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(View view, GoodsEntity data) {
@@ -274,8 +282,52 @@ public class HomeFragment extends Fragment
     }
     private Runnable task =new Runnable() {
         public void run() {
-            //handler.postDelayed(this,5*1000);
-            initData();
+            Log.v("test1","gmail : "+alreadyloggedAccount);
+            gl = (GlobalVariable)getActivity().getApplication();
+            gmail = gl.getGmail();
+            line0 = ws_test2.personinfoselect(gmail);//"Apple@gmail.com"
+            devicelist = ws_test2.homerecyclrview2(gmail);//"Apple@gmail.com"
+            line1 = ws_test2.homerecyclrview(gmail);//"Apple@gmail.com"
+            Log.v("test1","123123"+line0+gmail);
+            line00 = ws_test2.deviceinfoselect(devicelist);
+            if (line1.length!= 0 ) {
+                for (int i = 0; i < line1.length; i++) {
+                    frienddata = new ArrayList<>();
+                    line2 = ws_test2.personinfoselect(line1[i]);
+                    devicelist = ws_test2.homerecyclrview2(line1[i]);
+                    line10 = ws_test2.deviceinfoselect(devicelist);
+                    if (line2.equals("error") == false) {
+                        String[] split_line2 = line2.split("%");
+                        frienddata.add(split_line2[0].replaceAll("\\s",""));
+                        frienddata.add(split_line2[6]);
+                        if(line10.equals("error") == false)
+                        {
+                            split_line22 = line10.split("%");
+                            frienddata.add(split_line22[0].replaceAll("\\s",""));
+                            frienddata.add(split_line22[7]);
+                        }
+                    }
+                    friend.add(frienddata);
+                }
+            }
+            handler.post(task2);
+        }
+    };
+    private Runnable task2 =new Runnable() {
+        public void run() {
+            if (line0.equals("error")==false) {
+                String[] split_line0 = line0.split("%");
+                Log.v("test1","erty "+split_line0.length);
+                String[] split_line00 = line00.split("%");
+                title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.HEADER, split_line0[0].replaceAll("\\s",""),split_line0[6]));
+                title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.CHILD, split_line00[0].replaceAll("\\s",""),split_line00[7]));
+            }
+            for (int i = 0; i < line1.length; i++) {
+                title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.HEADER, friend.get(i).get(0), friend.get(i).get(1)));
+                if (friend.get(i).size()>2) {
+                    title.add(new homeRecyclerAdapter.Item(homeRecyclerAdapter.CHILD, friend.get(i).get(2), friend.get(i).get(3)));
+                }
+            }
             RecyclerView();
         }
     };
@@ -313,9 +365,8 @@ public class HomeFragment extends Fragment
             Animator anim = ViewAnimationUtils.createCircularReveal(addfriendlayout, x, y, startRadius, endRadius);
             anim.addListener(new Animator.AnimatorListener() {
                 @Override
-                public void onAnimationStart(Animator animator) {
-
-                }
+                public void onAnimationStart(Animator animator)
+                { }
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
@@ -335,4 +386,17 @@ public class HomeFragment extends Fragment
             isOpen = false;
         }
     }
+    /*private Runnable task =new Runnable() {
+        public void run() {
+            initData();
+            Log.v("test1","44444444");
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Log.v("test1","55555555");
+            RecyclerView();
+        }
+    };*/
 }

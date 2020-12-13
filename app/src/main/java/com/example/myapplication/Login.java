@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +32,14 @@ public class Login extends AppCompatActivity {
     private static final String TAG = "AndroidClarified";
     private SignInButton googleSignInButton;
     private GoogleSignInClient googleSignInClient;
+    GlobalVariable gmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Window window = this.getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorAccent));
         googleSignInButton = findViewById(R.id.sign_in_button);
         setGooglePlusButtonText(googleSignInButton);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -56,8 +61,7 @@ public class Login extends AppCompatActivity {
             switch (requestCode) {
                 case 101:
                     try {
-                        // The Task returned from this call is always completed, no need to attach
-                        // a listener.
+                        // The Task returned from this call is always completed, no need to attach a listener.
                         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                         GoogleSignInAccount account = task.getResult(ApiException.class);
                         onLoggedIn(account);
@@ -74,13 +78,18 @@ public class Login extends AppCompatActivity {
                 String line = ws_test2.signupornot(googleSignInAccount.getEmail());
                 if (line.equals("error")==false) {
                     Intent intent = new Intent(getApplication(), MainActivity.class);
+                    Log.v("test1","error=false");
+                    intent.putExtra("gmail",googleSignInAccount.getEmail());
+                    gmail = (GlobalVariable)getApplicationContext();
+                    gmail.setGmail(googleSignInAccount.getEmail());
                     startActivity(intent);
                     finish();
                 }
                 else{
-                    Intent intent = new Intent(getApplication(), MainActivity.class);
+                    Intent intent = new Intent(getApplication(), Signup.class);
+                    Log.v("test1","error=true");
+                    intent.putExtra("gmail",googleSignInAccount.getEmail());
                     startActivity(intent);
-                    finish();
                 }
             }
         };
@@ -92,6 +101,7 @@ public class Login extends AppCompatActivity {
         GoogleSignInAccount alreadyloggedAccount = GoogleSignIn.getLastSignedInAccount(this);
         if (alreadyloggedAccount != null) {
             Toast.makeText(this, "Already Logged In", Toast.LENGTH_SHORT).show();
+            Log.v("test1",alreadyloggedAccount.getEmail());
             onLoggedIn(alreadyloggedAccount);
         } else {
             Log.d(TAG, "Not logged in");

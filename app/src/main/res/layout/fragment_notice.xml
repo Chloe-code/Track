@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#99FFFFFF">
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,6 +18,14 @@
             android:id="@+id/noticelist"
             android:layout_alignParentTop="true"/>
     </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nonotice"
+        android:visibility="gone"
+        android:text="目前沒有新通知"
+        android:textSize="30dp"
+        android:layout_gravity="center"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

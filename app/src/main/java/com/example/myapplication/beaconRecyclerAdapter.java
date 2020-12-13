@@ -117,6 +117,7 @@ public class beaconRecyclerAdapter extends RecyclerView.Adapter<beaconRecyclerAd
                                         }
                                     }
                                 }.start();
+
                             }
                         }, 500);
                     }

@@ -131,6 +131,7 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
                 byteArray = Base64.decode(split_line[7], Base64.DEFAULT);
                 Bitmap decodedImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
                 qrimg.setImageBitmap(Bitmap.createScaledBitmap(decodedImage, r2.getWidth(), r2.getHeight()-10, false));
+                r2.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 r2.addView(qrimg);
             }
         }

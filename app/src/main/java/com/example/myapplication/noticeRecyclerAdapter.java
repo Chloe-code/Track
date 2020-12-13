@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,11 +22,15 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static java.lang.Thread.sleep;
+
 public class noticeRecyclerAdapter extends RecyclerView.Adapter<noticeRecyclerAdapter.ViewHolder>
 {
     private ArrayList<String> name,pic,email;
     private Context context;
     byte[] byteArray;
+    String getemail,getline;
+    private Handler handler = new Handler();
 
     public noticeRecyclerAdapter(Context context, ArrayList<String> requestname, ArrayList<String> requestemail, ArrayList<String> requestpic) {
         this.name = requestname;
@@ -68,18 +73,36 @@ public class noticeRecyclerAdapter extends RecyclerView.Adapter<noticeRecyclerAd
                 @SuppressLint("ResourceType")
                 @Override
                 public void onClick(View view) {
-                    final String requestmail = email.get(getAdapterPosition());
-                    Thread thread = new Thread(){
-                        public void run() {
-                            String line = ws_test2.acceptrequest("Apple@gmail.com",requestmail,1,"Apple@gmail.com");
-                            if (line.equals("1")==true) {
-
-                            }
-                        }
-                    };
-                    thread.start();
+                    getemail = email.get(getAdapterPosition());
+                    handler.post(task);
                 }
             });
         }
     }
+    private void init() {
+        new Thread (){
+            public void run() {
+                getline = ws_test2.acceptrequest("Apple@gmail.com",getemail,1,"Apple@gmail.com");
+            }
+        }.start();
+    }
+    private Runnable task =new Runnable() {
+        public void run() {
+            init();
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(Integer.valueOf(getline)==1)
+            {
+                View toastView = LayoutInflater.from(context).inflate(R.layout.checkaddfriendtoast, null);
+                Toast toast = new Toast(context);
+                toast.setView(toastView);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0,0);
+                toast.show();
+            }
+        }
+    };
 }

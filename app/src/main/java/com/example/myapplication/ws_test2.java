@@ -303,14 +303,17 @@ public class ws_test2 {
 
             // 獲取回傳數據
             SoapObject object = (SoapObject) envelope.getResponse();
+            Log.v("test1",object.toString());
             // 獲取返回的結果
             int intPropertyCount = object.getPropertyCount();
             result2 = new String[intPropertyCount];
             for (int i = 0; i <intPropertyCount; i++) {
                 result2[i]=(object.getProperty(i).toString());
+                Log.v("test1","1118"+result2[i]);
             }
             return result2;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return result2;
         }
     }
@@ -431,15 +434,15 @@ public class ws_test2 {
         //必須用try catch包著
         try {
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-            request.addProperty("DeviceName",devicename);
+            request.addProperty("UserName",devicename);
             request.addProperty("Email",email);
             request.addProperty("UUID",deviceid);
             request.addProperty("Gender",gender);
             request.addProperty("Birth",birth);
-            request.addProperty("Word",word);
-            request.addProperty("imgurl",imgurl);
             request.addProperty("Distance",distance);
             request.addProperty("privategps",privategps);
+            request.addProperty("Word",word);
+            request.addProperty("imgurl",imgurl);
 
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             envelope.bodyOut = request;
@@ -453,6 +456,7 @@ public class ws_test2 {
             SoapObject object = (SoapObject) envelope.bodyIn;
             // 獲取返回的結果
             String result = object.getProperty(0).toString();
+            Log.v("test1","結果"+result);
             return result;
         } catch (Exception e) {
             return e.toString();
@@ -627,6 +631,91 @@ public class ws_test2 {
             return Integer.valueOf(result);
         } catch (Exception e) {
             return Integer.valueOf(e.toString());
+        }
+    }
+    public static String deviceinfoupdate(String devicename, String uuid, String phone, String birth, String gender, String word, String imgurl)
+    {
+        String SOAP_ACTION = " http://tempuri.org/personinfoupdate";
+        String METHOD_NAME = "personinfoupdate";
+        //必須用try catch包著
+        try {
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            //request.addProperty("UserName",username);
+            //request.addProperty("Email",email);
+            request.addProperty("Phone",phone);
+            request.addProperty("Gender",gender);
+            request.addProperty("Birth",birth);
+            request.addProperty("Word",word);
+            request.addProperty("imgurl",imgurl);
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.bodyOut = request;
+            envelope.dotNet = true;//若WS有輸入參數必須要加這一行否則WS沒反應
+            envelope.setOutputSoapObject(request);
+            envelope.encodingStyle = "utf-8";
+            HttpTransportSE ht = new HttpTransportSE(URL);
+            ht.call(SOAP_ACTION, envelope);
+
+            /// 獲取回傳數據
+            SoapObject object = (SoapObject) envelope.bodyIn;
+            // 獲取返回的結果
+            String result = object.getProperty(0).toString();
+            return result;
+        } catch (Exception e) {
+            return e.toString();
+        }
+    }
+    public static Integer beaconrssi(String usersetbeacondistance)
+    {
+        String SOAP_ACTION = " http://tempuri.org/beaconrssi";
+        String METHOD_NAME = "beaconrssi";
+        //必須用try catch包著
+        try {
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            request.addProperty("usersetbeacondistance",usersetbeacondistance);
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.bodyOut = request;
+            envelope.dotNet = true;//若WS有輸入參數必須要加這一行否則WS沒反應
+            envelope.setOutputSoapObject(request);
+            envelope.encodingStyle = "utf-8";
+            HttpTransportSE ht = new HttpTransportSE(URL);
+            ht.call(SOAP_ACTION, envelope);
+
+            /// 獲取回傳數據
+            SoapObject object = (SoapObject) envelope.bodyIn;
+            // 獲取返回的結果
+            String result = object.getProperty(0).toString();
+            return Integer.valueOf(result);
+        } catch (Exception e) {
+            return Integer.valueOf(e.toString());
+        }
+    }
+    public static String deletefriend(String usergmail, String friendgmail)
+    {
+        String SOAP_ACTION = " http://tempuri.org/deletefriendship";
+        String METHOD_NAME = "deletefriendship";
+        //必須用try catch包著
+        try {
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            request.addProperty("usergmail",usergmail);
+            request.addProperty("friendgmail",friendgmail);
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.bodyOut = request;
+            envelope.dotNet = true;//若WS有輸入參數必須要加這一行否則WS沒反應
+            envelope.setOutputSoapObject(request);
+            envelope.encodingStyle = "utf-8";
+            HttpTransportSE ht = new HttpTransportSE(URL);
+            ht.call(SOAP_ACTION, envelope);
+
+            /// 獲取回傳數據
+            SoapObject object = (SoapObject) envelope.bodyIn;
+            // 獲取返回的結果
+            String result = object.getProperty(0).toString();
+            return result;
+        } catch (Exception e) {
+            return e.toString();
         }
     }
 }

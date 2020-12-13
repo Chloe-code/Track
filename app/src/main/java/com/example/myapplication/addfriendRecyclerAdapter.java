@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class addfriendRecyclerAdapter extends RecyclerView.Adapter<addfriendRecy
     private ArrayList<String> name,pic,email;
     private Context context;
     byte[] byteArray;
+    GoogleSignInAccount alreadyloggedAccount;
 
     public addfriendRecyclerAdapter(Context context, ArrayList<String> friendname,ArrayList<String> friendemail,ArrayList<String> friendpic) {
         this.name = friendname;
@@ -39,6 +43,7 @@ public class addfriendRecyclerAdapter extends RecyclerView.Adapter<addfriendRecy
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = View.inflate(context, R.layout.addfriendlist,null);
+        alreadyloggedAccount = GoogleSignIn.getLastSignedInAccount(context);
         return new ViewHolder(itemView);
     }
 
@@ -78,7 +83,7 @@ public class addfriendRecyclerAdapter extends RecyclerView.Adapter<addfriendRecy
                     final String friendmail = email.get(getAdapterPosition());
                     Thread thread = new Thread(){
                         public void run() {
-                            String line = ws_test2.addfriend("Apple@gmail.com",friendmail,0,"Apple@gmail.com");
+                            String line = ws_test2.addfriend(alreadyloggedAccount.getEmail(),friendmail,0,alreadyloggedAccount.getEmail());
                             if (line.equals("1")==true) {
 
                             }

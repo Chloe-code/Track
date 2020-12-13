@@ -13,8 +13,8 @@
         android:layout_gravity="center"
         android:background="@drawable/white_circleborder">
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:id="@+id/friendpic"
             android:src="@drawable/dodo3"/>
     </FrameLayout>

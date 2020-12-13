@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:background="#FFFFFF"
     android:contentInsetStart="0dp"
-    android:layoutDirection="rtl"
-    android:minHeight="?attr/actionBarSize">
+    android:layoutDirection="rtl">
 
     <TextView
         android:id="@+id/textView2"
@@ -16,8 +15,9 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:text="TrackDear"
+        android:letterSpacing="0.2"
         android:textColor="#707070"
-        android:textSize="29sp" />
+        android:textSize="26sp" />
     <!--<ImageButton
         android:id="@+id/imageButton3"
         android:layout_width="35dp"

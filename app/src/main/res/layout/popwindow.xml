@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <LinearLayout
         android:id="@+id/ll_pop"
         android:layout_width="match_parent"
@@ -18,7 +17,7 @@
             android:id="@+id/icon_btn_camera"
             android:layout_width="match_parent"
             android:layout_height="42dp"
-            android:background="@drawable/ic_picture"
+            android:background="@drawable/popwindow"
             android:text="相機"
             android:textColor="#0066FF" />
         ​
@@ -30,16 +29,16 @@
             android:id="@+id/icon_btn_choose"
             android:layout_width="match_parent"
             android:layout_height="42dp"
-            android:background="@drawable/ic_picture"
+            android:background="@drawable/popwindow"
             android:text="相簿"
             android:onClick="choosePhoto"
             android:textColor="#0066FF" />
         ​
         <Button
             android:id="@+id/icon_btn_cancel"
-            android:background="@drawable/ic_picture"
             android:layout_width="match_parent"
             android:layout_height="42dp"
+            android:background="@drawable/popwindow"
             android:layout_marginBottom="15dp"
             android:layout_marginTop="10dp"
             android:text="取消"

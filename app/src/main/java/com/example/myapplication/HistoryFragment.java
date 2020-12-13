@@ -1,4 +1,4 @@
-package com.example.myapplication.Fragment;
+package com.example.myapplication;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;

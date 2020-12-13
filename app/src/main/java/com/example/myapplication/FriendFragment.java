@@ -1,4 +1,4 @@
-package com.example.myapplication.Fragment;
+package com.example.myapplication;
 
 import android.content.Context;
 import android.content.Intent;

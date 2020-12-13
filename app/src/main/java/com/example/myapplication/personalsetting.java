@@ -51,6 +51,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -70,12 +73,10 @@ public class personalsetting extends AppCompatActivity
     private CircleImageView circleimageview;
     public static final String TAG="MyLog";
     private ImageView imageView6,imageView9,male,female;
-    private LinearLayout layout2;
-    private RelativeLayout layout1;
+    private LinearLayout layout1,layout2;
     SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
     String startText = "", encodedImage;
-    private Uri iconUri = null;
-    private Uri cropImageUri = null;
+    private Uri iconUri = null, cropImageUri = null;
     public static final String imageDirPath = "/sdcard/TrackDear";
     public static final String crop_ImageName = "crop_image.jpg";
     private static final int REQUEST_CODE_TAKE_PHOTO = 0;
@@ -85,15 +86,14 @@ public class personalsetting extends AppCompatActivity
     private TextView birth, datepick;
     byte[] byteArray;
     Handler handler;
-    private String lineu=null;
-    private String line2=null;
+    private String lineu=null, line2=null;
+    GoogleSignInAccount alreadyloggedAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personalsetting);
-
         datepick = findViewById(R.id.textView);
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
@@ -177,7 +177,7 @@ public class personalsetting extends AppCompatActivity
         });
 
         buttonsave = (Button) findViewById(R.id.buttonsave);
-        layout1 = findViewById(R.id.person1);
+        layout1 = findViewById(R.id.person3);
         layout1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -186,7 +186,7 @@ public class personalsetting extends AppCompatActivity
                 inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
             }
         });
-        layout2 = findViewById(R.id.person2);
+        layout2 = findViewById(R.id.person4);
         layout2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -205,7 +205,7 @@ public class personalsetting extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 mwindow = new pop_window_view(personalsetting.this, itemsOnClick);
-                mwindow.showAtLocation(personalsetting.this.findViewById(R.id.person1), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+                mwindow.showAtLocation(personalsetting.this.findViewById(R.id.person3), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
             }
         });
         name = (EditText) findViewById(R.id.editText7);
@@ -215,10 +215,11 @@ public class personalsetting extends AppCompatActivity
         intro = (EditText) findViewById(R.id.editText10);
         male = (ImageView) findViewById(R.id.imageviewmale);
         female = (ImageView) findViewById(R.id.imageviewfemale);
+        alreadyloggedAccount = GoogleSignIn.getLastSignedInAccount(context);
         handler = new Handler();
         new Thread() {
             public void run() {
-                line2 = ws_test2.personinfoselect("Apple@gmail.com");
+                line2 = ws_test2.personinfoselect(alreadyloggedAccount.getEmail());
                 handler.post(runnableUi2);
             }
         }.start();
@@ -344,14 +345,16 @@ public class personalsetting extends AppCompatActivity
     {
         new Thread() {
             public void run() {
-                //if(male.getVisibility()==View.VISIBLE)
-                //{
-                    lineu = ws_test2.personinfoupdate(name.getText().toString(),email.getText().toString(),phone.getText().toString(),birth.getText().toString(),"男",intro.getText().toString(),encodedImage);
-                //}
-                /*if(female.getVisibility()==View.VISIBLE)
+                if(male.getVisibility()==View.VISIBLE)
                 {
+                    Log.v("test1","set"+encodedImage);
+                    lineu = ws_test2.personinfoupdate(name.getText().toString(),email.getText().toString(),phone.getText().toString(),birth.getText().toString(),"男",intro.getText().toString(),encodedImage);
+                }
+                if(female.getVisibility()==View.VISIBLE)
+                {
+                    Log.v("test1","set"+encodedImage);
                     lineu = ws_test2.personinfoupdate(name.getText().toString(),email.getText().toString(),phone.getText().toString(),birth.getText().toString(),"女",intro.getText().toString(),encodedImage);
-                }*/
+                }
                 handler.post(runnableUi);
             }
         }.start();
@@ -382,6 +385,8 @@ public class personalsetting extends AppCompatActivity
                 else { male.setVisibility(View.VISIBLE);}
                 intro.setText(split_line2[5]);
                 byteArray = Base64.decode(split_line2[6], Base64.DEFAULT);
+                encodedImage = split_line2[6];
+                Log.v("test1","set1122"+encodedImage);
                 Bitmap decodedImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
                 circleimageview.setImageBitmap(decodedImage);
             }

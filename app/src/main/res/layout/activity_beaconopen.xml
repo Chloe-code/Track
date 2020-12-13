@@ -41,13 +41,4 @@
             android:id="@+id/devicebeacon"
             android:layout_alignParentTop="true"/>
     </LinearLayout>
-    <Switch
-        android:id="@+id/switch2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:padding="10dp"
-        android:thumb="@drawable/switchthumb"
-        android:track="@drawable/switchtrack" />
 </LinearLayout>

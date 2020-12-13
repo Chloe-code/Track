@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -28,6 +31,7 @@ public class personaledit extends AppCompatActivity
     Handler handler;
     private CircleImageView circleimageview;
     byte[] byteArray;
+    GoogleSignInAccount alreadyloggedAccount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,13 +61,14 @@ public class personaledit extends AppCompatActivity
         imagegender = (ImageView) findViewById(R.id.imageView8);
         circleimageview = (CircleImageView) findViewById(R.id.profile_image);
         handler = new Handler();
+        alreadyloggedAccount = GoogleSignIn.getLastSignedInAccount(context);
     }
     protected void onStart()
     {
         super.onStart();
         new Thread() {
             public void run() {
-                line = ws_test2.personinfoselect("Apple@gmail.com");
+                line = ws_test2.personinfoselect(alreadyloggedAccount.getEmail());
                 handler.post(runnableUi);
             }
         }.start();

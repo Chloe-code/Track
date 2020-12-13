@@ -11,16 +11,15 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -28,10 +27,9 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Message;
+import android.os.RemoteException;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
 import android.util.Log;
@@ -39,16 +37,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myapplication.Fragment.FriendFragment;
-import com.example.myapplication.Fragment.HistoryFragment;
-import com.example.myapplication.Fragment.HomeFragment;
-import com.example.myapplication.Fragment.NoticeFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -75,44 +68,50 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import android.os.Handler;
 
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.MonitorNotifier;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.Region;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.LogRecord;
 
 import static java.lang.Double.parseDouble;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     //implements OnMapReadyCallback
-    boolean logon=false;
     Toolbar toolbar;
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient fusedLocationProviderClient;
     DrawerLayout drawerLayout;
     ImageButton menuRight;
-    private Fragment mhomefragment=null;
-    private Fragment mfriendfragment=null;
-    private Fragment mhistoryfragment=null;
-    private Fragment mnoticefragment=null;
+    private Fragment mhomefragment=null, mfriendfragment=null, mhistoryfragment=null, mnoticefragment=null;
     public MarkerOptions markerOptions2,markerOptions;
     ArrayList<LatLng> friendmarker = new ArrayList<>();
     ArrayList<String> infowindow = new ArrayList<>();
     String[] split_line10=null;
-    String dline=null;
+    String dline=null, gmail;
     mapinfowindow adapter;
-    Handler handler; Geocoder geocoder;
+    private Handler handler = new Handler();
+    Geocoder geocoder;
     private GoogleSignInClient googleSignInClient;
     public LatLng latLng,latLng3;
+    Integer standardrssi=0,nowrssi=0, sum=0, beaconfirstcheck=0;
+    private BeaconManager beaconManager;
+    private ArrayList<Integer> averagerssi = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (!logon){
-            Intent intent = new Intent(this, Login.class);
-            startActivity(intent);
-        }
+        //Intent intent = getIntent();
+        //gmail = intent.getStringExtra("gmail");
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -157,11 +156,17 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
         }
         mhomefragment=new HomeFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("gmail", gmail);
+        Log.v("test1","Main bundle : "+gmail);
+        mhomefragment.setArguments(bundle);
         mfriendfragment=new FriendFragment();
         mhistoryfragment=new HistoryFragment();
         mnoticefragment=new NoticeFragment();
         setDefaultFragment();
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("beacon_open"));
+        beaconManager = BeaconManager.getInstanceForApplication(getApplication());
+        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
     }
     private void getCurrentLocation() {
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
@@ -182,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
                             googleMap.addMarker(markerOptions2);
                             for(int i=0;i<friendmarker.size(); i++)
                             {
+                                Log.v("test3","12/8  "+friendmarker.get(i));
                                 googleMap.addMarker(new MarkerOptions().position(friendmarker.get(i)).title(split_line10[6]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                             }
                             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -224,9 +230,23 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().hide(mhistoryfragment).commit();
                     getSupportFragmentManager().beginTransaction().hide(mnoticefragment).commit();
                     if (!mhomefragment.isAdded()) {
-                        getSupportFragmentManager().beginTransaction().add(R.id.google_map, mhomefragment).commit();
+                        getSupportFragmentManager().beginTransaction().add(R.id.google_map, mhomefragment).detach(mhomefragment).attach(mhomefragment).commit();  //.detach(mhomefragment).attach(mhomefragment)
+                        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(GoogleMap googleMap) {
+                                googleMap.getUiSettings().setScrollGesturesEnabled(true);
+                            }
+                        });
                     }
-                    else{getSupportFragmentManager().beginTransaction().show(mhomefragment).commit();}
+                    else {
+                        getSupportFragmentManager().beginTransaction().show(mhomefragment).detach(mhomefragment).attach(mhomefragment).commit();
+                        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(GoogleMap googleMap) {
+                                googleMap.getUiSettings().setScrollGesturesEnabled(true);
+                            }
+                        });
+                    }
                     break;
                 case R.id.action_friend:
                     getSupportFragmentManager().beginTransaction().hide(mhomefragment).commit();
@@ -234,6 +254,21 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().hide(mnoticefragment).commit();
                     if (!mfriendfragment.isAdded()) {
                         getSupportFragmentManager().beginTransaction().add(R.id.google_map, mfriendfragment).commit();
+                        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(GoogleMap googleMap) {
+                                googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                            }
+                        });
+                    }
+                    else {
+                        getSupportFragmentManager().beginTransaction().show(mfriendfragment).commit();
+                        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(GoogleMap googleMap) {
+                                googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                            }
+                        });
                     }
                     break;
                 case R.id.action_history:
@@ -242,15 +277,44 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().hide(mnoticefragment).commit();
                     if (!mhistoryfragment.isAdded()) {
                         getSupportFragmentManager().beginTransaction().add(R.id.google_map, mhistoryfragment).commit();
+                        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(GoogleMap googleMap) {
+                                googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                            }
+                        });
                     }
-                    else{getSupportFragmentManager().beginTransaction().show(mhistoryfragment).commit();}
+                    else {
+                        getSupportFragmentManager().beginTransaction().show(mhistoryfragment).commit();
+                        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(GoogleMap googleMap) {
+                                googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                            }
+                        });
+                    }
                     break;
                 case R.id.action_notice:
                     getSupportFragmentManager().beginTransaction().hide(mhomefragment).commit();
                     getSupportFragmentManager().beginTransaction().hide(mhistoryfragment).commit();
                     getSupportFragmentManager().beginTransaction().hide(mfriendfragment).commit();
                     if (!mnoticefragment.isAdded()) {
-                        getSupportFragmentManager().beginTransaction().add(R.id.google_map, mnoticefragment).commit();
+                        getSupportFragmentManager().beginTransaction().add(R.id.google_map, mnoticefragment).detach(mnoticefragment).attach(mnoticefragment).commit();
+                        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(GoogleMap googleMap) {
+                                googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                            }
+                        });
+                    }
+                    else {
+                        getSupportFragmentManager().beginTransaction().show(mnoticefragment).detach(mnoticefragment).attach(mnoticefragment).commit();
+                        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(GoogleMap googleMap) {
+                                googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                            }
+                        });
                     }
                     break;
             }
@@ -333,6 +397,7 @@ public class MainActivity extends AppCompatActivity {
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         alertDialog.dismiss();
+                        finish();
                     }
                 });
             }
@@ -380,8 +445,10 @@ public class MainActivity extends AppCompatActivity {
                         String line = ws_test2.select_devicelocation("IM-235-TD001");
                         if (line.equals("error")==false) {
                             String[] split_line = line.split("%");
+                            Log.v("test3","12/4  "+split_line.length);
                             LatLng latLng2 = new LatLng(parseDouble(split_line[4]), parseDouble(split_line[5]));
-                            markerOptions2 = new MarkerOptions().position(latLng2).title("IM-235-TD001");//.snippet(subTitle)
+                            Log.v("test3","12/4  "+latLng2.toString());
+                            markerOptions2 = new MarkerOptions().position(latLng2).title("IM-235-TD001");
                         }
                         infowindow = new ArrayList<>();
                         String[] line1 = ws_test2.homerecyclrview("Apple@gmail.com");
@@ -391,7 +458,9 @@ public class MainActivity extends AppCompatActivity {
                                 String line10 = ws_test2.select_devicelocation(devicelist);
                                 if (line10.equals("error") == false) {
                                     split_line10 = line10.split("%");
+                                    Log.v("test3","12/5  "+split_line10.length);
                                     LatLng latlngfrienddevice=new LatLng(Double.parseDouble(split_line10[4]), Double.parseDouble(split_line10[5]));
+                                    Log.v("test3","12/5  "+latlngfrienddevice.toString());//確認藍色的有沒有出現
                                     friendmarker.add(latlngfrienddevice);
                                 }
                             }
@@ -401,7 +470,7 @@ public class MainActivity extends AppCompatActivity {
                 thread.start();
             }
         };
-        timer.schedule(timerTask, 0,3000);
+        timer.schedule(timerTask, 0,15000);
     }
     public void onmarker(final String m, final GoogleMap googleMap, final Marker marker)
     {
@@ -493,12 +562,70 @@ public class MainActivity extends AppCompatActivity {
         int kmInDec = Integer.valueOf(newFormat.format(km));
         double meter = valueResult % 1000;
         int meterInDec = Integer.valueOf(newFormat.format(meter));
-        Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
-                + " Meter   " + meterInDec);
+        Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec + " Meter   " + meterInDec);
         Log.v("distance",String.valueOf(Radius*c*1000));
         return Radius * c*1000;
     }
     public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String deviceuuid = intent.getStringExtra("device_beacon_open");
+            final String devicedistance = intent.getStringExtra("device_distance");
+            final Handler Handler = new Handler();
+            Timer Timer = new Timer();
+            TimerTask TimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    new Thread() {
+                        public void run() {
+                            String line = ws_test2.deviceinfoselect(deviceuuid);
+                            if (line.equals("error") == false) {
+                                String[] split_line = line.split("%");
+                                standardrssi = ws_test2.beaconrssi(split_line[5]+"M");
+                            }
+                        }
+                    }.start();
+                    Handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            new  Thread(){
+                                @Override
+                                public void run() {
+                                    int line = ws_test2.beaconcheck(deviceuuid);
+                                    if (line==1) {
+                                        Log.v("test2","測試1 stand"+standardrssi.toString());
+                                        stopbeacon();
+                                        beaconfirstcheck=1;
+                                        Log.v("test2","測試2 now"+nowrssi.toString());
+                                        if (standardrssi > nowrssi)
+                                        {
+                                            startService( new Intent( MainActivity.this, notification_device.class )) ;
+                                            Log.v("test2","測試3");
+                                        }
+                                        startbeacon();
+                                        Log.v("test2","測試4");
+                                    }
+                                    else if (line==0) {
+                                        Log.v("test2","測試5");
+                                        stopbeacon();
+                                        stopService( new Intent( MainActivity.this, notification_device.class )) ;
+                                    }
+                                }
+                            }.start();
+                        }
+                    },500);
+                }
+            };
+            Timer.schedule(TimerTask, 5000, 50000);
+            Toast.makeText(MainActivity.this, deviceuuid + " " + devicedistance, Toast.LENGTH_SHORT).show();
+        }
+    };
+    /*@Override
+    protected void onStop () {
+        super .onStop() ;
+        //startService( new Intent( this, notification_device.class )) ;
+    }*/
+    /*一開始寫近距離的偵測是用gps經緯度直接去計算public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String deviceuuid = intent.getStringExtra("device_beacon_open");
@@ -531,6 +658,9 @@ public class MainActivity extends AppCompatActivity {
                                             startService( new Intent( MainActivity.this, notification_device.class )) ;
                                         }
                                     }
+                                    else if (line==0) {
+                                        stopService( new Intent( MainActivity.this, notification_device.class )) ;
+                                    }
                                 }
                             }.start();
                         }
@@ -540,10 +670,107 @@ public class MainActivity extends AppCompatActivity {
             Timer.schedule(TimerTask, 5000, 50000);
             Toast.makeText(MainActivity.this, deviceuuid + " " + devicedistance, Toast.LENGTH_SHORT).show();
         }
-    };
-    /*@Override
-    protected void onStop () {
-        super .onStop() ;
-        //startService( new Intent( this, notification_device.class )) ;
-    }*/
+    };*/
+    public void onBeaconServiceConnect() {
+
+        final Region region = new Region("myBeaons",null, null, null);
+        beaconManager.addMonitorNotifier(new MonitorNotifier() {
+
+            @Override
+            public void didEnterRegion(Region region) {
+                System.out.println("ENTER ------------------->");
+                try {
+                    beaconManager.startRangingBeaconsInRegion(region);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void didExitRegion(Region region) {
+                System.out.println("EXIT----------------------->");
+                try {
+                    beaconManager.stopRangingBeaconsInRegion(region);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void didDetermineStateForRegion(int state, Region region) {
+                try {
+                    beaconManager.startRangingBeaconsInRegion(region);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                System.out.println( "I have just switched from seeing/not seeing beacons: "+state);
+            }
+        });
+
+        beaconManager.addRangeNotifier(new RangeNotifier() {
+
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+
+                if (beacons.size() > 0) {
+                    for (Beacon b:beacons){
+                        String uuid = String.valueOf(b.getId1());
+                        if(uuid.equals("e2c56db5-dffb-48d2-b060-d0f5a71096e0")) {
+                            if(uuid!=null) {
+                                Log.v("test1","reviewbeacon有收到資料");
+                                averagerssi.add(b.getRssi());
+                            }
+                        }
+                    }
+                }
+                else if (beacons.size()==0)
+                {    }
+            }
+        });
+        try {
+            //Tells the BeaconService to start looking for beacons that match the passed Region object.
+            beaconManager.startMonitoringBeaconsInRegion(region);
+        } catch (RemoteException e){    }
+    }
+    @Override
+    public Context getApplicationContext() {
+        return getApplication().getApplicationContext();
+    }
+
+    @Override
+    public void unbindService(ServiceConnection serviceConnection) {
+        getApplication().unbindService(serviceConnection);
+    }
+
+    @Override
+    public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
+        return getApplication().bindService(intent, serviceConnection, i);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        beaconManager.unbind(this);
+    }
+
+    public void startbeacon()
+    {
+        Log.v("test2","startbeacon");
+        sum = 0;
+        averagerssi = new ArrayList<>();
+        beaconManager.bind(this);
+    }
+    public void stopbeacon()
+    {
+        Log.v("test2",beaconfirstcheck.toString());
+        if(beaconfirstcheck==0)
+        { nowrssi=0; }
+        else
+        {
+            for(int i=0; i<averagerssi.size(); i++)
+            { sum = sum + averagerssi.get(i); }
+            nowrssi = sum/averagerssi.size();
+        }
+        beaconManager.unbind(this);
+    }
 }

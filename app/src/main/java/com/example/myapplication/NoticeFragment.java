@@ -1,4 +1,4 @@
-package com.example.myapplication.Fragment;
+package com.example.myapplication;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
@@ -25,6 +26,8 @@ import static java.lang.Thread.sleep;
 public class NoticeFragment extends Fragment
 {
     private View view;
+    private TextView tv;
+    private String[] dline;
     private RecyclerView recyclerView;
     private ArrayList<String> resultname ,resultpic, resultemail;
     private noticeRecyclerAdapter noticerecyclerAdapter;
@@ -33,6 +36,7 @@ public class NoticeFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_notice,container, false);
+        tv = view.findViewById(R.id.nonotice);
         resultname = new ArrayList<>();
         resultemail = new ArrayList<>();
         resultpic = new ArrayList<>();
@@ -45,15 +49,7 @@ public class NoticeFragment extends Fragment
         new Thread() {
             @Override
             public void run() {
-                String[] dline = ws_test2.noticerequest("Apple@gmail.com");
-                if (dline!=null) {
-                    for(int i=0;i<dline.length;i++) {
-                        String[] split_line = dline[i].split("%");
-                        resultname.add(split_line[0]);
-                        resultemail.add(split_line[1]);
-                        resultpic.add(split_line[2]);
-                    }
-                }
+                dline = ws_test2.noticerequest("Apple@gmail.com");
             }
         }.start();
     }
@@ -73,7 +69,18 @@ public class NoticeFragment extends Fragment
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            RecyclerView();
+            if (dline.length!=0) {
+                for(int i=0;i<dline.length;i++) {
+                    String[] split_line = dline[i].split("%");
+                    resultname.add(split_line[0]);
+                    resultemail.add(split_line[1]);
+                    resultpic.add(split_line[2]);
+                }
+                RecyclerView();
+            }
+            else if (dline.length==0) {
+                tv.setVisibility(View.VISIBLE);
+            }
         }
     };
 }
