@@ -60,16 +60,13 @@ public class FriendFragment extends Fragment {
         handler.post(task);
         return view;
     }
-
-
-
     private void initData()
     {
         new Thread() {
             @Override
             public void run() {
-                line2 = ws_test2.friend_list("Apple");
-                Log.v("test3","goooooodName");
+                line2 = ws_test2.friend_list("Hedy");
+                //line2 = ws_test2.friend_list("Apple");
                 if (line2!=null)
                 {
                     for(int i=0;i<line2.length;i++)
@@ -78,6 +75,7 @@ public class FriendFragment extends Fragment {
                         String[] split_line = line2[i].split("%");
                         users.setName(split_line[0]);
                         users.setStatus(split_line[1]);
+                        users.setUserimg(split_line[2]);
                         friendlist.add(users);
                     }
                 }
@@ -90,23 +88,20 @@ public class FriendFragment extends Fragment {
         mUserList.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         adapterUsers = new fri_RecyclerViewAdapter(getContext(),friendlist);
         mUserList.setAdapter(adapterUsers);
-
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //name = (TextView) getView().findViewById(R.id.textView3);
         //btn = (Button) getView().findViewById(R.id.button3);
-
     }
 
     private Runnable task =new Runnable() {
         public void run() {
             initData();
             try {
-                sleep(500);
+                sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

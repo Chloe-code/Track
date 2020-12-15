@@ -76,11 +76,14 @@ public class Login extends AppCompatActivity {
         Thread thread = new Thread(){
             public void run() {
                 String line = ws_test2.signupornot(googleSignInAccount.getEmail());
+                //String line = ws_test2.signupornot("Apple@gmail.com");
                 if (line.equals("error")==false) {
                     Intent intent = new Intent(getApplication(), MainActivity.class);
                     Log.v("test1","error=false");
                     intent.putExtra("gmail",googleSignInAccount.getEmail());
+                    //intent.putExtra("gmail","Apple@gmail.com");
                     gmail = (GlobalVariable)getApplicationContext();
+                    //gmail.setGmail("Apple@gmail.com");
                     gmail.setGmail(googleSignInAccount.getEmail());
                     startActivity(intent);
                     finish();
@@ -105,6 +108,7 @@ public class Login extends AppCompatActivity {
             onLoggedIn(alreadyloggedAccount);
         } else {
             Log.d(TAG, "Not logged in");
+            //onLoggedIn(alreadyloggedAccount);
         }
     }
     protected void setGooglePlusButtonText(SignInButton googleSignInButton) {

@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                     getSupportFragmentManager().beginTransaction().hide(mhistoryfragment).commit();
                     getSupportFragmentManager().beginTransaction().hide(mnoticefragment).commit();
                     if (!mfriendfragment.isAdded()) {
-                        getSupportFragmentManager().beginTransaction().add(R.id.google_map, mfriendfragment).commit();
+                        getSupportFragmentManager().beginTransaction().add(R.id.google_map, mfriendfragment).detach(mfriendfragment).attach(mfriendfragment).commit();
                         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                             @Override
                             public void onMapReady(GoogleMap googleMap) {
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                         });
                     }
                     else {
-                        getSupportFragmentManager().beginTransaction().show(mfriendfragment).commit();
+                        getSupportFragmentManager().beginTransaction().show(mfriendfragment).detach(mfriendfragment).attach(mfriendfragment).commit();
                         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                             @Override
                             public void onMapReady(GoogleMap googleMap) {
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                     getSupportFragmentManager().beginTransaction().hide(mfriendfragment).commit();
                     getSupportFragmentManager().beginTransaction().hide(mnoticefragment).commit();
                     if (!mhistoryfragment.isAdded()) {
-                        getSupportFragmentManager().beginTransaction().add(R.id.google_map, mhistoryfragment).commit();
+                        getSupportFragmentManager().beginTransaction().add(R.id.google_map, mhistoryfragment).detach(mhistoryfragment).attach(mhistoryfragment).commit();
                         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                             @Override
                             public void onMapReady(GoogleMap googleMap) {
@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                         });
                     }
                     else {
-                        getSupportFragmentManager().beginTransaction().show(mhistoryfragment).commit();
+                        getSupportFragmentManager().beginTransaction().show(mhistoryfragment).detach(mhistoryfragment).attach(mhistoryfragment).commit();
                         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                             @Override
                             public void onMapReady(GoogleMap googleMap) {

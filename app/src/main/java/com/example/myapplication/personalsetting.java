@@ -219,7 +219,7 @@ public class personalsetting extends AppCompatActivity
         handler = new Handler();
         new Thread() {
             public void run() {
-                line2 = ws_test2.personinfoselect(alreadyloggedAccount.getEmail());
+                line2 = ws_test2.personinfoselect(alreadyloggedAccount.getEmail());//alreadyloggedAccount.getEmail()
                 handler.post(runnableUi2);
             }
         }.start();

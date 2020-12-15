@@ -26,8 +26,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class fri_RecyclerViewAdapter extends RecyclerView.Adapter<fri_RecyclerViewAdapter.ViewHolder> {
-
-
     private ArrayList<Users> friendlist;
     private Context context;
     String theLastMessage;
@@ -45,21 +43,14 @@ public class fri_RecyclerViewAdapter extends RecyclerView.Adapter<fri_RecyclerVi
         return new ViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-
+        Log.v("tttttttttt",friendlist.get(position).getUserimg());
         holder.Name.setText(friendlist.get(position).getName());
         holder.Status.setText(friendlist.get(position).getStatus());
         byteArray = Base64.decode(friendlist.get(position).getUserimg(), Base64.DEFAULT);
         Bitmap decodedImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
         holder.Img.setImageBitmap(decodedImage);
-        //holder.Img.setImageResource(R.drawable.ic_people);
-//        if(friendlist.get(position).getUserimg().equals("default")){
-//                holder.Img.setImageResource(R.drawable.ic_people);
-//        }else {
-//            Glide.with(context).load(friendlist.get(position).getUserimg()).into(holder.Img);
-//        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

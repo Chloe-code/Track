@@ -146,15 +146,16 @@ public class ws_test2 {
             return result2;
         }
     }
-    public static String messageinsert(String msg) {
+    public static String messageinsert(String sender, String receiver, String msg, String photo) {
         String SOAP_ACTION = " http://tempuri.org/messageinsert";          //命名空間+要用的函數名稱
         String METHOD_NAME = "messageinsert";
         //必須用try catch包著
         try {
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-            request.addProperty("sender", "Apple");
-            request.addProperty("receiver", "Hedy");
+            request.addProperty("sender", sender);
+            request.addProperty("receiver", receiver);
             request.addProperty("msg", msg);
+            request.addProperty("photo", photo);
 
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             envelope.bodyOut = request;

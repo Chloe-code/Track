@@ -3,8 +3,7 @@
     android:id="@+id/fri_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#C06C84"
-    >
+    android:background="#C06C84">
     <TextView
         android:text="@string/friend_list"
         android:layout_width="match_parent"
@@ -12,6 +11,4 @@
         android:textColor="#FFFFFF"
         android:gravity="center_horizontal"
         android:textSize="24sp"/>
-
-
 </androidx.appcompat.widget.Toolbar>

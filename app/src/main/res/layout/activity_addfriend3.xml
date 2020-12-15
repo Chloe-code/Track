@@ -41,13 +41,13 @@
             app:srcCompat="@drawable/ic_search_black_24dp"/>
     </FrameLayout>
 
-    <SearchView
+    <!--<SearchView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/friendsearch"
         android:iconifiedByDefault="false"
         android:animateLayoutChanges="true"
-        android:queryHint="請輸入好友名稱..."/>
+        android:queryHint="請輸入好友名稱..."/>-->
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -62,11 +62,6 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"/>
     </LinearLayout>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="deletefriend"
-        android:text="刪除好友"/>
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

@@ -9,21 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/friendimg"
-            android:elevation="3dp"
-            android:layout_margin="6dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_people"
-            android:scaleType="centerCrop"/>
-
             <TextView
                 android:id="@+id/lefttext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed"
                 android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_margin="10dp"
                 android:padding="5dp"
                 android:text="1"
                 android:background="@drawable/editname"
@@ -51,7 +44,8 @@
             android:id="@+id/righttime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="7dp"
             android:layout_marginLeft="5dp"
             android:fontFamily="sans-serif-condensed"
             android:text="time"
@@ -65,7 +59,7 @@
             android:layout_gravity="center"
             android:padding="5dp"
             android:layout_marginLeft="5dp"
-            android:background="@drawable/editname"
+            android:background="@drawable/editname3"
             android:layout_toRightOf="@+id/righttime"
             android:textColor="#000"
             android:textSize="16sp" />

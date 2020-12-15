@@ -38,7 +38,6 @@ public class addfriend3 extends AppCompatActivity {
     private addfriendRecyclerAdapter addfriendrecyclerAdapter;
     private Handler handler = new Handler();
     private EditText entername;
-    private SearchView searchname;
     private ImageView imageback;
 
     @Override
@@ -49,9 +48,8 @@ public class addfriend3 extends AppCompatActivity {
         resultpic = new ArrayList<>();
         resultemail = new ArrayList<>();
         initData();
-        handler.postDelayed(task,500);
+        handler.postDelayed(task,2500);
         entername = (EditText) findViewById(R.id.editText6);
-        searchname = (SearchView) findViewById(R.id.friendsearch);
         imageback = (ImageView) findViewById(R.id.imageback);
         imageback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,17 +100,4 @@ public class addfriend3 extends AppCompatActivity {
             RecyclerView();
         }
     };
-    public void deletefriend (View view)
-    {
-        new Thread() {
-            @Override
-            public void run() {
-                String deleteresult = ws_test2.deletefriend("Apple@gmail.com","chloechloe6332@gmail.com");
-                Log.v("test1","deletefriendname : "+deleteresult);
-                if (deleteresult!=null) {
-
-                }
-            }
-        }.start();
-    }
 }

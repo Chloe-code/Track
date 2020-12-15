@@ -12,6 +12,8 @@ import android.widget.Toast;
 import com.example.myapplication.R;
 import com.example.myapplication.noticeRecyclerAdapter;
 import com.example.myapplication.ws_test2;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +34,7 @@ public class NoticeFragment extends Fragment
     private ArrayList<String> resultname ,resultpic, resultemail;
     private noticeRecyclerAdapter noticerecyclerAdapter;
     private Handler handler = new Handler();
+    GoogleSignInAccount alreadyloggedAccount;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class NoticeFragment extends Fragment
         resultname = new ArrayList<>();
         resultemail = new ArrayList<>();
         resultpic = new ArrayList<>();
+        alreadyloggedAccount = GoogleSignIn.getLastSignedInAccount(this.getContext());
         handler.post(task);
         return view;
     }
@@ -49,7 +53,8 @@ public class NoticeFragment extends Fragment
         new Thread() {
             @Override
             public void run() {
-                dline = ws_test2.noticerequest("Apple@gmail.com");
+                dline = ws_test2.noticerequest(alreadyloggedAccount.getEmail());
+                Log.v("srtggt",dline.toString());
             }
         }.start();
     }
@@ -65,7 +70,7 @@ public class NoticeFragment extends Fragment
         public void run() {
             initData();
             try {
-                sleep(500);
+                sleep(2500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -77,6 +82,7 @@ public class NoticeFragment extends Fragment
                     resultpic.add(split_line[2]);
                 }
                 RecyclerView();
+                Log.v("dfgdg","drfgtdrfgd ");
             }
             else if (dline.length==0) {
                 tv.setVisibility(View.VISIBLE);

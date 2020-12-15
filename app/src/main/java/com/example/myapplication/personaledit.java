@@ -68,7 +68,7 @@ public class personaledit extends AppCompatActivity
         super.onStart();
         new Thread() {
             public void run() {
-                line = ws_test2.personinfoselect(alreadyloggedAccount.getEmail());
+                line = ws_test2.personinfoselect(alreadyloggedAccount.getEmail());//alreadyloggedAccount.getEmail()
                 handler.post(runnableUi);
             }
         }.start();

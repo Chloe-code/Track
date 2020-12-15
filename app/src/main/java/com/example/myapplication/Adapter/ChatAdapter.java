@@ -32,7 +32,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private ArrayList<Chat> mChat;
     public final int MSG_TYPE_LEFT = 0;
     public final int MSG_TYPE_RIGHT = 1;
-    private String[] line = null;
     byte[] byteArray;
 
     public ChatAdapter(Context mContext, ArrayList<Chat> mChat) {
@@ -48,32 +47,27 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ChatAdapter.ViewHolder holder, int position) {
-        Log.v("ererereer", mChat.get(position).getSender());
-        if(getItemViewType(position)==0)
+        if(getItemViewType(position)==1)
         {
             holder.rightMsg.setText(mChat.get(position).getMessage());
             holder.rightTime.setText(mChat.get(position).getTime());
             holder.left.setVisibility(View.INVISIBLE);
         }
-        else
+        if(getItemViewType(position)==0)
         {
             holder.leftMsg.setText(mChat.get(position).getMessage());
             holder.leftTime.setText(mChat.get(position).getTime());
-            byteArray = Base64.decode(mChat.get(position).getProfileImg(), Base64.DEFAULT);
-            Bitmap decodedImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            holder.friendimg.setImageBitmap(decodedImage);
             holder.right.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public int getItemViewType(final int position) {
-
-        if(mChat.get(position).getSender().equals("Apple")){
-            return MSG_TYPE_RIGHT;
-        }else {
-            return MSG_TYPE_LEFT;
-        }
+        String v = mChat.get(position).getSender().replaceAll("\\s","");
+        if (v.equals("Hedy"))
+        { return MSG_TYPE_RIGHT; }
+        else
+        { return MSG_TYPE_LEFT; }
     }
     @Override
     public int getItemCount() {
@@ -83,7 +77,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView leftTime,rightTime,leftMsg,rightMsg;
-        CircleImageView friendimg;
         LinearLayout left;
         RelativeLayout right;
 
@@ -93,7 +86,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             rightMsg = itemView.findViewById(R.id.righttext);
             leftTime = itemView.findViewById(R.id.lefttime);
             rightTime =itemView.findViewById(R.id.righttime);
-            friendimg = itemView.findViewById(R.id.friendimg);
             right = itemView.findViewById(R.id.rightlayout);
             left = itemView.findViewById(R.id.leftlayout);
         }
