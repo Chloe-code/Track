@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class beaconopen extends AppCompatActivity {
     private Handler handler = new Handler();
     private ImageView imageback;
     int pp=1;
-    GoogleSignInAccount googlesigninaccount;
+    GoogleSignInAccount alreadyloggedAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class beaconopen extends AppCompatActivity {
         resultuuid = new ArrayList<>();
         resultbeacon = new ArrayList<>();
         initData();
-        handler.postDelayed(task,500);
+        handler.postDelayed(task,1500);
         imageback = (ImageView) findViewById(R.id.beaconlistback);
         imageback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +45,7 @@ public class beaconopen extends AppCompatActivity {
                 finish();
             }
         });
+        alreadyloggedAccount = GoogleSignIn.getLastSignedInAccount(this);
     }
 
     private void initData()
@@ -51,7 +53,7 @@ public class beaconopen extends AppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-                String dline = ws_test2.homerecyclrview2(googlesigninaccount.getEmail());//"Apple@gmail.com"
+                String dline = ws_test2.homerecyclrview2("Apple@gmail.com");
                 String dline2 = ws_test2.deviceinfoselect(dline);
                 int line = ws_test2.beaconcheck(dline);
                 if (dline2!=null) {

@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         mhomefragment=new HomeFragment();
         Bundle bundle = new Bundle();
         bundle.putString("gmail", gmail);
-        Log.v("test1","Main bundle : "+gmail);
         mhomefragment.setArguments(bundle);
         mfriendfragment=new FriendFragment();
         mhistoryfragment=new HistoryFragment();
@@ -445,7 +444,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                         String line = ws_test2.select_devicelocation("IM-235-TD001");
                         if (line.equals("error")==false) {
                             String[] split_line = line.split("%");
-                            Log.v("test3","12/4  "+split_line.length);
                             LatLng latLng2 = new LatLng(parseDouble(split_line[4]), parseDouble(split_line[5]));
                             Log.v("test3","12/4  "+latLng2.toString());
                             markerOptions2 = new MarkerOptions().position(latLng2).title("IM-235-TD001");
@@ -470,6 +468,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 thread.start();
             }
         };
+        getCurrentLocation();
         timer.schedule(timerTask, 0,15000);
     }
     public void onmarker(final String m, final GoogleMap googleMap, final Marker marker)
