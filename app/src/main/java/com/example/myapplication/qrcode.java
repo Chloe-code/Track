@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,7 +44,7 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
     ImageView qrimg;
     private String line=null, line2=null;
     Handler handler;
-    private GoogleSignInAccount googleSignInAccount;
+    GoogleSignInAccount alreadyloggedAccount;
     TextView email,name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,7 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
             }
         });
         handler = new Handler();
+        alreadyloggedAccount = GoogleSignIn.getLastSignedInAccount(this);
     }
 
     @Override
@@ -167,6 +169,15 @@ public class qrcode extends AppCompatActivity implements ZXingScannerView.Result
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Thread thread = new Thread(){
+                    public void run() {
+                        String line = ws_test2.addfriend(alreadyloggedAccount.getEmail(),email.toString(),0,alreadyloggedAccount.getEmail());
+                        if (line.equals("1")==true) {
+
+                        }
+                    }
+                };
+                thread.start();
                 alertDialog.dismiss();
             }
         });

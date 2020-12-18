@@ -78,8 +78,6 @@ public class fri_RecyclerViewAdapter extends RecyclerView.Adapter<fri_RecyclerVi
     }
     private void lastMessage (String username, TextView Last_msg){
         theLastMessage = "default";
-
-
     }
 }
 

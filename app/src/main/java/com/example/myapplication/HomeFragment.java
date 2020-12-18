@@ -288,7 +288,7 @@ public class HomeFragment extends Fragment
             line0 = ws_test2.personinfoselect(gmail);//"Apple@gmail.com"
             devicelist = ws_test2.homerecyclrview2(gmail);//"Apple@gmail.com"
             line1 = ws_test2.homerecyclrview(gmail);//"Apple@gmail.com"
-            Log.v("test1","123123"+line0+gmail);
+            Log.v("test1","123123"+line1);
             line00 = ws_test2.deviceinfoselect(devicelist);
             if (line1.length!= 0 ) {
                 for (int i = 0; i < line1.length; i++) {

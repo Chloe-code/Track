@@ -84,6 +84,7 @@ public class addfriendRecyclerAdapter extends RecyclerView.Adapter<addfriendRecy
                     Thread thread = new Thread(){
                         public void run() {
                             String line = ws_test2.addfriend(alreadyloggedAccount.getEmail(),friendmail,0,alreadyloggedAccount.getEmail());
+                            //String line = ws_test2.addfriend("Apple@gmail.com",friendmail,0,"Apple@gmail.com");
                             if (line.equals("1")==true) {
 
                             }

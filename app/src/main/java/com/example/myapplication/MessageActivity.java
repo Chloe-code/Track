@@ -33,6 +33,8 @@ import com.example.myapplication.Adapter.ChatAdapter;
 import com.example.myapplication.Adapter.fri_RecyclerViewAdapter;
 import com.example.myapplication.Model.Chat;
 import com.example.myapplication.Model.Users;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -76,6 +78,7 @@ public class MessageActivity extends AppCompatActivity {
     String line;
     byte[] byteArray;
     Button delete;
+    GoogleSignInAccount alreadyloggedAccount;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -122,6 +125,7 @@ public class MessageActivity extends AppCompatActivity {
                 showDialog();
             }
         });
+        alreadyloggedAccount = GoogleSignIn.getLastSignedInAccount(this);
     }
     private void pickImgFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -235,7 +239,7 @@ public class MessageActivity extends AppCompatActivity {
                 new Thread() {
                     @Override
                     public void run() {
-                        String deleteresult = ws_test2.deletefriend("Apple@gmail.com","chloechloe6332@gmail.com");
+                        String deleteresult = ws_test2.deletefriend("Apple@gmail.com",alreadyloggedAccount.getEmail());
                         Log.v("test1","deletefriendname : "+deleteresult);
                         if (deleteresult!=null) {
                             alertDialog.dismiss();

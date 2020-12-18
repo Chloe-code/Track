@@ -69,6 +69,7 @@ public class personaledit extends AppCompatActivity
         new Thread() {
             public void run() {
                 line = ws_test2.personinfoselect(alreadyloggedAccount.getEmail());//alreadyloggedAccount.getEmail()
+                //line = ws_test2.personinfoselect("Apple@gmail.com");//alreadyloggedAccount.getEmail()
                 handler.post(runnableUi);
             }
         }.start();

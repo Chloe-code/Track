@@ -57,6 +57,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -83,6 +85,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static java.lang.Double.parseDouble;
+import static java.lang.Thread.sleep;
 
 public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     //implements OnMapReadyCallback
@@ -105,13 +108,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     Integer standardrssi=0,nowrssi=0, sum=0, beaconfirstcheck=0;
     private BeaconManager beaconManager;
     private ArrayList<Integer> averagerssi = new ArrayList<>();
+    private ArrayList<LatLng> traceOfMe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Intent intent = getIntent();
-        //gmail = intent.getStringExtra("gmail");
+        Intent intent = getIntent();
+        gmail = intent.getStringExtra("gmail");
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -166,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("beacon_open"));
         beaconManager = BeaconManager.getInstanceForApplication(getApplication());
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        handler.post(task);
     }
     private void getCurrentLocation() {
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
@@ -179,10 +184,10 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                             latLng = new LatLng(location.getLatitude(), location.getLongitude());
                             markerOptions = new MarkerOptions().position(latLng).title("I Am Here.").icon(bitmapDescriptorFromVector(MainActivity.this,R.drawable.ic_user));
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                            googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+                            //googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
                             //googleMap.setMyLocationEnabled(true);
                             googleMap.addMarker(markerOptions).hideInfoWindow();
-                            //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
                             googleMap.addMarker(markerOptions2);
                             for(int i=0;i<friendmarker.size(); i++)
                             {
@@ -226,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             switch (item.getItemId()) {
                 case R.id.action_home:
                     getSupportFragmentManager().beginTransaction().hide(mfriendfragment).commit();
-                    getSupportFragmentManager().beginTransaction().hide(mhistoryfragment).commit();
+                    getSupportFragmentManager().beginTransaction().remove(mhistoryfragment).commit();
                     getSupportFragmentManager().beginTransaction().hide(mnoticefragment).commit();
                     if (!mhomefragment.isAdded()) {
                         getSupportFragmentManager().beginTransaction().add(R.id.google_map, mhomefragment).detach(mhomefragment).attach(mhomefragment).commit();  //.detach(mhomefragment).attach(mhomefragment)
@@ -249,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                     break;
                 case R.id.action_friend:
                     getSupportFragmentManager().beginTransaction().hide(mhomefragment).commit();
-                    getSupportFragmentManager().beginTransaction().hide(mhistoryfragment).commit();
+                    getSupportFragmentManager().beginTransaction().remove(mhistoryfragment).commit();
                     getSupportFragmentManager().beginTransaction().hide(mnoticefragment).commit();
                     if (!mfriendfragment.isAdded()) {
                         getSupportFragmentManager().beginTransaction().add(R.id.google_map, mfriendfragment).detach(mfriendfragment).attach(mfriendfragment).commit();
@@ -295,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                     break;
                 case R.id.action_notice:
                     getSupportFragmentManager().beginTransaction().hide(mhomefragment).commit();
-                    getSupportFragmentManager().beginTransaction().hide(mhistoryfragment).commit();
+                    getSupportFragmentManager().beginTransaction().remove(mhistoryfragment).commit();
                     getSupportFragmentManager().beginTransaction().hide(mfriendfragment).commit();
                     if (!mnoticefragment.isAdded()) {
                         getSupportFragmentManager().beginTransaction().add(R.id.google_map, mnoticefragment).detach(mnoticefragment).attach(mnoticefragment).commit();
@@ -435,10 +440,10 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     public void onStart()
     {
         super.onStart();
-        Timer timer = new Timer(true);
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
+        //Timer timer = new Timer(true);
+        //TimerTask timerTask = new TimerTask() {
+            //@Override
+            //public void run() {
                 Thread thread = new Thread(){
                     public void run() {
                         String line = ws_test2.select_devicelocation("IM-235-TD001");
@@ -466,10 +471,10 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                     }
                 };
                 thread.start();
-            }
-        };
+            //}
+        //};
         getCurrentLocation();
-        timer.schedule(timerTask, 0,15000);
+        //timer.schedule(timerTask, 0,15000);
     }
     public void onmarker(final String m, final GoogleMap googleMap, final Marker marker)
     {
@@ -540,7 +545,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         background.draw(canvas);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }//之後再考慮使用者本身要用什麼圖案標記在地圖上
+    }
 
     public double CalculationByDistance(LatLng StartP, LatLng EndP) {
         int Radius = 6371;
@@ -772,4 +777,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         }
         beaconManager.unbind(this);
     }
+    private Runnable task =new Runnable() {
+        public void run() {
+            try {
+                sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getCurrentLocation();
+        }
+    };
 }

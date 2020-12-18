@@ -343,7 +343,7 @@ public class Signup extends AppCompatActivity implements ZXingScannerView.Result
         }
     }
     public void startCropImage(Uri uri) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
+        Intent intent = new Intent(MediaStore.Images.Media.DATA);
         intent.setDataAndType(uri, "image/*");
         intent.putExtra("crop", "true");
         intent.putExtra("aspectX", 1);

@@ -65,6 +65,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     public int getItemViewType(final int position) {
         String v = mChat.get(position).getSender().replaceAll("\\s","");
         if (v.equals("Hedy"))
+        //if (v.equals("Apple"))
         { return MSG_TYPE_RIGHT; }
         else
         { return MSG_TYPE_LEFT; }

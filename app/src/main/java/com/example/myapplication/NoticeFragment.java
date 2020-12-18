@@ -54,7 +54,7 @@ public class NoticeFragment extends Fragment
             @Override
             public void run() {
                 dline = ws_test2.noticerequest(alreadyloggedAccount.getEmail());
-                Log.v("srtggt",dline.toString());
+                //dline = ws_test2.noticerequest("Apple@gmail.com");
             }
         }.start();
     }
@@ -82,7 +82,6 @@ public class NoticeFragment extends Fragment
                     resultpic.add(split_line[2]);
                 }
                 RecyclerView();
-                Log.v("dfgdg","drfgtdrfgd ");
             }
             else if (dline.length==0) {
                 tv.setVisibility(View.VISIBLE);

@@ -12,7 +12,7 @@
         android:background="#C06C84">
 
         <TextView
-            android:text="  Hedy"
+            android:text="  Apple"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

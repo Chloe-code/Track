@@ -43,12 +43,6 @@ public class FriendFragment extends Fragment {
     Button button;
     Context context;
 
-
-    /*private static final String NAMESPACE = "http://tempuri.org/";       //WebService預設的命名空間
-    private static final String METHOD_NAME = "FriendList";
-    private  static final String SOAP_ACTION = " http://tempuri.org/FriendList";          //命名空間+要用的函數名稱
-    private static final String URL = "http://localhost:13715/WebService.asmx?WSDL";*/
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -101,7 +95,7 @@ public class FriendFragment extends Fragment {
         public void run() {
             initData();
             try {
-                sleep(3000);
+                sleep(3500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -219,7 +219,8 @@ public class personalsetting extends AppCompatActivity
         handler = new Handler();
         new Thread() {
             public void run() {
-                line2 = ws_test2.personinfoselect(alreadyloggedAccount.getEmail());//alreadyloggedAccount.getEmail()
+                //line2 = ws_test2.personinfoselect("Apple@gmail.com");//alreadyloggedAccount.getEmail()
+                line2 = ws_test2.personinfoselect(alreadyloggedAccount.getEmail());
                 handler.post(runnableUi2);
             }
         }.start();

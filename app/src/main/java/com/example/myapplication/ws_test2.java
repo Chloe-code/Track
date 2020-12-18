@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class ws_test2 {
     private static final String NAMESPACE = "http://tempuri.org/";       //WebService預設的命名空間
-    private static final String URL = "http://134.208.96.168/webservice/WebService.asmx";     //WebService的網址
+    private static final String URL = "http://172.20.10.11//webservice/WebService.asmx";     //WebService的網址
     private static final String URL1 = "http://localhost:13715/WebService.asmx";
 
     private Users users;
